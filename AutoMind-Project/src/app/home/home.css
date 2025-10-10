@@ -14,3 +14,40 @@ p {
   color: #B0B0B0;
 }
 
+/* ====== Header SECTION ====== */
+.hero {
+  position: relative;
+  text-align: center;
+  color: #fff;
+  padding: 8rem 2rem;
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top right, #6C63FF33, #0F111A);
+  z-index: -1;
+}
+
+.hero-content h1 {
+  font-size: 4rem;
+  color: #6C63FF;
+  margin-bottom: 0.5rem;
+}
+
+.hero-content h2 {
+  font-weight: 400;
+  color: #E0E0E0;
+  margin-bottom: 1rem;
+}
+
+.hero-content p {
+  max-width: 700px;
+  margin: auto;
+  font-size: 1.1rem;
+}
+
+.hero-buttons {
+  margin-top: 2rem;
+}
