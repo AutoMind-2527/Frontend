@@ -51,3 +51,34 @@ p {
 .hero-buttons {
   margin-top: 2rem;
 }
+
+.btn-primary, .btn-outline {
+  padding: 0.9rem 1.8rem;
+  border-radius: 30px;
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0.5rem;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: #6C63FF;
+  border: none;
+  color: #fff;
+  transition: background 0.3s;
+}
+
+.btn-primary:hover {
+  background: #584efc;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid #6C63FF;
+  color: #6C63FF;
+}
+
+.btn-outline:hover {
+  background: #6C63FF;
+  color: #fff;
+}
