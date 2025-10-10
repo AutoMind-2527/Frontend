@@ -82,3 +82,86 @@ p {
   background: #6C63FF;
   color: #fff;
 }
+
+.intro {
+  text-align: center;
+  padding: 5rem 2rem;
+  background: #141621;
+}
+
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 3rem;
+  gap: 2rem;
+}
+
+.stat {
+  background: #1B1E2A;
+  padding: 2rem;
+  border-radius: 16px;
+  width: 180px;
+}
+
+.stat h3 {
+  color: #00C9A7;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.features {
+  padding: 5rem 2rem;
+  text-align: center;
+}
+
+.feature-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.feature-card {
+  background: #1B1E2A;
+  border-radius: 16px;
+  padding: 2rem;
+  width: 300px;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-8px);
+}
+
+.feature-card img {
+  width: 60px;
+  margin-bottom: 1rem;
+}
+
+.vision {
+  background: linear-gradient(135deg, #1B1E2A, #0F111A);
+  padding: 6rem 2rem;
+  text-align: center;
+}
+
+.vision-content {
+  max-width: 800px;
+  margin: auto;
+}
+
+.cta {
+  background: #141621;
+  text-align: center;
+  padding: 5rem 2rem;
+}
+
+footer {
+  background: #0D0E14;
+  text-align: center;
+  padding: 1.5rem;
+  color: #8C8C8C;
+  font-size: 0.9rem;
+}
