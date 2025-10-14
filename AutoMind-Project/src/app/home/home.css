@@ -5,10 +5,14 @@ body {
   color: #E0E0E0;
 }
 
-h1, h2, h3 {
+h1{
   font-weight: 600;
 }
 
+h2, h3{
+  font-weight: 500;
+  color: #A0A0A0;
+}
 p {
   line-height: 1.6;
   color: #B0B0B0;
