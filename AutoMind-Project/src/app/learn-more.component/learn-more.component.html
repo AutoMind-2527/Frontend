@@ -1,2 +1,272 @@
-<p>learn-more.component works!</p>
-<p>Additional content can go here.</p>
+<div class="learn-more-page">
+  <!-- Header Section -->
+  <header class="page-header">
+    <div class="container">
+      <nav class="breadcrumb">
+        <a routerLink="/" class="breadcrumb-link">Home</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">Project Details</span>
+      </nav>
+      <div class="header-content">
+        <div class="logo-section">
+          <div class="project-logo">AutoMind</div>
+          <h1>Intelligent Vehicle Monitoring System</h1>
+          <p class="subtitle">Academic Project - IoT & Web Application Development</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Project Overview -->
+  <section class="project-overview">
+    <div class="container">
+      <div class="overview-grid">
+        <div class="overview-content">
+          <h2>Project Overview</h2>
+          <p>
+            AutoMind is an academic project focused on developing an intelligent vehicle monitoring system 
+            that integrates IoT hardware with a web application platform. The system delivers real-time 
+            vehicle tracking, comprehensive driving behavior analytics, and environmental impact insights.
+          </p>
+          <div class="key-features">
+            <div class="feature-tag">Real-time GPS Tracking</div>
+            <div class="feature-tag">Driving Analytics</div>
+            <div class="feature-tag">Eco-Insights</div>
+            <div class="feature-tag">Fleet Management</div>
+          </div>
+        </div>
+        <div class="overview-visual">
+          <div class="architecture-diagram">
+            <div class="diagram-item hardware">
+              <span>📱 IoT Device</span>
+            </div>
+            <div class="diagram-arrow">↓</div>
+            <div class="diagram-item cloud">
+              <span>☁️ Cloud API</span>
+            </div>
+            <div class="diagram-arrow">↓</div>
+            <div class="diagram-item webapp">
+              <span>💻 Web Dashboard</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Components -->
+  <section class="core-components">
+    <div class="container">
+      <h2>System Architecture</h2>
+      <div class="components-grid">
+        <div class="component-card">
+          <div class="component-icon">🛰️</div>
+          <h3>IoT Hardware</h3>
+          <ul>
+            <li>GPS & IMU Sensors</li>
+            <li>LTE-M Connectivity</li>
+            <li>Real-time Data Transmission</li>
+            <li>Power Management</li>
+          </ul>
+        </div>
+        <div class="component-card">
+          <div class="component-icon">☁️</div>
+          <h3>Cloud Infrastructure</h3>
+          <ul>
+            <li>Secure Data Processing</li>
+            <li>RESTful APIs</li>
+            <li>Data Encryption</li>
+            <li>Scalable Storage</li>
+          </ul>
+        </div>
+        <div class="component-card">
+          <div class="component-icon">📊</div>
+          <h3>Web Application</h3>
+          <ul>
+            <li>Real-time Dashboard</li>
+            <li>Responsive Design</li>
+            <li>User Authentication</li>
+            <li>Analytics Reporting</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Project Timeline -->
+  <section class="project-timeline">
+    <div class="container">
+      <h2>Project Development Phases</h2>
+      <div class="timeline">
+        <div class="timeline-phase" (click)="togglePhase(1)" [class.active]="currentPhase === 1">
+          <div class="phase-header">
+            <div class="phase-number">1</div>
+            <div class="phase-info">
+              <h3>Foundation</h3>
+              <span class="phase-duration">Sprint 1-2</span>
+            </div>
+          </div>
+          <div class="phase-details" *ngIf="currentPhase === 1">
+            <ul>
+              <li>Complete project planning and requirement analysis</li>
+              <li>Finalize technology stack selection</li>
+              <li>Design WebApp architecture framework</li>
+              <li>Research and select hardware components</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="timeline-phase" (click)="togglePhase(2)" [class.active]="currentPhase === 2">
+          <div class="phase-header">
+            <div class="phase-number">2</div>
+            <div class="phase-info">
+              <h3>Core Development</h3>
+              <span class="phase-duration">Sprint 3-4</span>
+            </div>
+          </div>
+          <div class="phase-details" *ngIf="currentPhase === 2">
+            <ul>
+              <li>Develop WebApp backend with user authentication</li>
+              <li>Implement database architecture</li>
+              <li>Assemble hardware prototype</li>
+              <li>Establish basic GPS data collection and transmission</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="timeline-phase" (click)="togglePhase(3)" [class.active]="currentPhase === 3">
+          <div class="phase-header">
+            <div class="phase-number">3</div>
+            <div class="phase-info">
+              <h3>Integration</h3>
+              <span class="phase-duration">Sprint 5-6</span>
+            </div>
+          </div>
+          <div class="phase-details" *ngIf="currentPhase === 3">
+            <ul>
+              <li>Conduct hardware-software integration testing</li>
+              <li>Implement live mapping functionality</li>
+              <li>Develop trip history and basic analytics</li>
+              <li>Integrate security features including encryption</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="timeline-phase" (click)="togglePhase(4)" [class.active]="currentPhase === 4">
+          <div class="phase-header">
+            <div class="phase-number">4</div>
+            <div class="phase-info">
+              <h3>Advanced Features</h3>
+              <span class="phase-duration">Sprint 7</span>
+            </div>
+          </div>
+          <div class="phase-details" *ngIf="currentPhase === 4">
+            <ul>
+              <li>Develop premium features including Driver Safety Score</li>
+              <li>Integrate vehicle database for Eco-Insights</li>
+              <li>Implement fleet management capabilities</li>
+              <li>Conduct comprehensive system testing</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="timeline-phase" (click)="togglePhase(5)" [class.active]="currentPhase === 5">
+          <div class="phase-header">
+            <div class="phase-number">5</div>
+            <div class="phase-info">
+              <h3>Finalization</h3>
+              <span class="phase-duration">Sprint 8</span>
+            </div>
+          </div>
+          <div class="phase-details" *ngIf="currentPhase === 5">
+            <ul>
+              <li>Optimize system performance</li>
+              <li>Complete project documentation</li>
+              <li>Prepare final presentation materials</li>
+              <li>Demonstrate fully functional system</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Risks & Opportunities -->
+  <section class="risks-opportunities">
+    <div class="container">
+      <div class="ro-grid">
+        <div class="risks-section">
+          <h2>Risk Management</h2>
+          <div class="risk-item">
+            <h4>Hardware-Software Integration</h4>
+            <p>Potential data transmission failures between device and cloud</p>
+            <span class="risk-mitigation">Mitigation: Early prototyping & API testing</span>
+          </div>
+          <div class="risk-item">
+            <h4>GPS Accuracy</h4>
+            <p>Inaccurate location data compromising system functionality</p>
+            <span class="risk-mitigation">Mitigation: Multi-source data validation</span>
+          </div>
+          <div class="risk-item">
+            <h4>Power Management</h4>
+            <p>Suboptimal battery performance affecting device operation</p>
+            <span class="risk-mitigation">Mitigation: Power optimization testing</span>
+          </div>
+        </div>
+
+        <div class="opportunities-section">
+          <h2>Educational Value</h2>
+          <div class="opportunity-item">
+            <h4>Comprehensive Learning</h4>
+            <p>Full-stack IoT development experience</p>
+          </div>
+          <div class="opportunity-item">
+            <h4>Portfolio Enhancement</h4>
+            <p>Demonstrate multi-domain technical proficiency</p>
+          </div>
+          <div class="opportunity-item">
+            <h4>Real-world Application</h4>
+            <p>Address genuine market needs in vehicle security</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Success Criteria -->
+  <section class="success-criteria">
+    <div class="container">
+      <h2>Success Metrics</h2>
+      <div class="criteria-grid">
+        <div class="criterion">
+          <div class="criterion-icon">✅</div>
+          <p>Functional hardware prototype with reliable data transmission</p>
+        </div>
+        <div class="criterion">
+          <div class="criterion-icon">🌐</div>
+          <p>Operational WebApp with real-time vehicle tracking</p>
+        </div>
+        <div class="criterion">
+          <div class="criterion-icon">🔒</div>
+          <p>Secure authentication system and data protection</p>
+        </div>
+        <div class="criterion">
+          <div class="criterion-icon">📈</div>
+          <p>Fully implemented basic and premium feature sets</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section class="cta-section">
+    <div class="container">
+      <h2>Ready to Explore?</h2>
+      <p>Experience the AutoMind dashboard with demo data or create an account to see full functionality.</p>
+      <div class="cta-buttons">
+        <button class="btn-primary" routerLink="/dashboard" [queryParams]="{mode: 'guest'}">Try Demo</button>
+        <button class="btn-outline" routerLink="/">Back to Home</button>
+      </div>
+    </div>
+  </section>
+</div>
