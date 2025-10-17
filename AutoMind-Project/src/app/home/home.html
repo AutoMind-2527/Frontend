@@ -7,12 +7,41 @@
       driver analytics, and sustainable mobility insights.
     </p>
     <div class="hero-buttons">
-      <button class="btn-primary" routerLink="/dashboard">Explore Dashboard</button>
+      <button class="btn-primary" (click)="openUserModal()">Explore Dashboard</button>
       <button class="btn-outline" routerLink="/learn-more">Learn More</button>
     </div>
   </div>
   <div class="hero-bg"></div>
 </section>
+
+<!-- User Selection Modal -->
+<div class="modal-overlay" *ngIf="showUserModal" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Access Dashboard</h3>
+      <button class="modal-close" (click)="closeModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p>Choose how you'd like to access the dashboard:</p>
+      <div class="user-options">
+        <button class="user-option guest-option" (click)="navigateAsGuest()">
+          <div class="option-icon">🚗</div>
+          <div class="option-content">
+            <h4>Continue as Guest</h4>
+            <p>Explore our webpage without saving any data</p>
+          </div>
+        </button>
+        <button class="user-option loggedin-option" (click)="navigateAsUser()">
+          <div class="option-icon">👤</div>
+          <div class="option-content">
+            <h4>Sign In</h4>
+            <p>Access your full account with personal data</p>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <section class="intro">
   <h2>Smarter Mobility Starts Here</h2>
@@ -41,7 +70,7 @@
     <div class="feature-card">
       <!-- Icon -->
       <h3>Real-Time GPS Tracking</h3>
-      <p>Stay informed about your vehicle’s live location at all times.</p>
+      <p>Stay informed about your vehicle's live location at all times.</p>
     </div>
     <div class="feature-card">
       <!-- Icon -->
