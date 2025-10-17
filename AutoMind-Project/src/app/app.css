@@ -25,6 +25,14 @@ ul li a {
 }
 
 .bottom{
-  bottom: 1%;
-  width: 720px;
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  max-width: 1200px;
+  margin: 1rem auto 0; /* center the footer block */
+  padding: 0.5rem 1rem;
+  text-align: center;
+  box-sizing: border-box;
+  color: #8C8C8C;
+  background: transparent;
 }

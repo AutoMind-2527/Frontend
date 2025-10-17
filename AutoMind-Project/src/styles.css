@@ -1,1 +1,35 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* Global styles / reset */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #0F111A; /* dark page background */
+  color: #E0E0E0;
+  font-family: 'Poppins', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+app-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  align-items: center; /* center content horizontally */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Ensure routed content can be constrained and centered */
+.router-content, main, section {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* small helper to remove any accidental white background on body children */
+* {
+  background-repeat: no-repeat;
+}

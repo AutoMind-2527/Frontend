@@ -1,8 +1,6 @@
-body {
-  margin: 0;
-  font-family: 'Poppins', sans-serif;
-  background-color: #0F111A;
-  color: #E0E0E0;
+/* Replace global body styling (moved to global styles.css) with host-level styling */
+:host {
+  display: block;
 }
 
 h1{
