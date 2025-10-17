@@ -22,6 +22,11 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "**/*",
+                "input": "favicon",
+                "output": "favicon"
               }
             ],
             "styles": [
@@ -79,6 +84,11 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "**/*",
+                "input": "favicon",
+                "output": "favicon"
               }
             ],
             "styles": [
