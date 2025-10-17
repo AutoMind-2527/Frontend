@@ -2,37 +2,31 @@
 ul {
   list-style-type: none;
   margin: 0;
-  padding: 10px;
-  overflow: hidden;
-  background-color: blue;
-  color: white;
+  padding: 0;
+  overflow: visible;
+  background-color: transparent;
+  color: var(--text);
 }
 
-/* CSS Descendant Combinator (https://developer.mozilla.org/en-US/docs/Web/CSS/Descendant_combinator) */
-ul li {
-  /* float CSS property (https://developer.mozilla.org/en-US/docs/Web/CSS/float) */
-  float: left;
-  margin-right: 10px;
-}
-/*
-  CSS :first-child pseudo-class (https://developer.mozilla.org/en-US/docs/Web/CSS/:first-child)
-  CSS :not() pseudo-class (https://developer.mozilla.org/en-US/docs/Web/CSS/:not)
-*/
+/* small list items layout */
+ul li { float: none; display: inline-block; margin-right: 12px; }
 
 /* CSS Descendant Combinator (https://developer.mozilla.org/en-US/docs/Web/CSS/Descendant_combinator) */
 ul li a {
   color: white;
 }
 
-.bottom{
+/* footer / bottom block */
+.bottom {
   position: relative;
-  bottom: 0;
   width: 100%;
-  max-width: 1200px;
-  margin: 1rem auto 0; /* center the footer block */
-  padding: 0.5rem 1rem;
+  max-width: var(--max-width);
+  margin: 1.2rem auto 0;
+  padding: 0.8rem 1rem;
   text-align: center;
   box-sizing: border-box;
-  color: #8C8C8C;
+  color: var(--muted);
   background: transparent;
+  border-top: 1px solid rgba(255,255,255,0.03);
+  border-radius: 8px;
 }

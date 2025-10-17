@@ -1,35 +1,85 @@
 /* You can add global styles to this file, and also import other style files */
 
 /* Global styles / reset */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+:root {
+  /* color system (softened, harmonious) */
+  --bg-900: #041024;
+  --bg-800: #07162b;
+  --surface: #0e1724;
+  --card: #0f1a2b;
+  --muted: #9fb0c8;
+  --text: #e6eef8;
+  --primary-400: #3b82f6; /* blue */
+  --primary-600: #6C63FF; /* purple-leaning accent */
+  --primary-700: #584efc;
+  --accent: #2fd1b4;
+  --glass: rgba(255,255,255,0.04);
+  --glass-strong: rgba(255,255,255,0.06);
+  --radius: 14px;
+  --max-width: 1200px;
+  --page-pad: 1rem;
+  --shadow-1: 0 8px 30px rgba(2,6,23,0.6);
+}
+
 html, body {
   height: 100%;
   margin: 0;
   padding: 0;
-  background-color: #0F111A; /* dark page background */
-  color: #E0E0E0;
-  font-family: 'Poppins', sans-serif;
+  background:
+    radial-gradient(800px 400px at 10% 10%, rgba(59,130,246,0.06), transparent),
+    linear-gradient(180deg, var(--bg-900), var(--bg-800));
+  color: var(--text);
+  font-family: 'Poppins', system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  box-sizing: border-box;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
 }
+
+*, *::before, *::after { box-sizing: inherit; }
 
 app-root {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  align-items: center; /* center content horizontally */
+  align-items: center;
   width: 100%;
-  box-sizing: border-box;
+  padding-left: var(--page-pad);
+  padding-right: var(--page-pad);
 }
 
-/* Ensure routed content can be constrained and centered */
-.router-content, main, section {
+/* ensure block sections center and have a readable max width */
+section, main {
   width: 100%;
-  max-width: 1200px;
+  max-width: var(--max-width);
   margin: 0 auto;
-  box-sizing: border-box;
+  padding-left: calc(var(--page-pad) * 0.5);
+  padding-right: calc(var(--page-pad) * 0.5);
 }
 
-/* small helper to remove any accidental white background on body children */
-* {
-  background-repeat: no-repeat;
+/* sensible defaults for buttons and links */
+button {
+  font-family: inherit;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+a { color: var(--primary-400); text-decoration: none; }
+
+p, h1, h2, h3, h4 { margin: 0 0 0.6rem 0; color: var(--text); }
+
+/* small helper to avoid unwanted opaque backgrounds */
+* { background-repeat: no-repeat; }
+
+/* helper container */
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 1rem;
 }
