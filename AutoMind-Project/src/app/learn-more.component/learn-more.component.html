@@ -106,14 +106,16 @@
               <span class="phase-duration">Sprint 1-2</span>
             </div>
           </div>
-          <div class="phase-details" *ngIf="currentPhase === 1">
-            <ul>
-              <li>Complete project planning and requirement analysis</li>
-              <li>Finalize technology stack selection</li>
-              <li>Design WebApp architecture framework</li>
-              <li>Research and select hardware components</li>
-            </ul>
-          </div>
+          @if (currentPhase === 1) {
+            <div class="phase-details">
+              <ul>
+                <li>Complete project planning and requirement analysis</li>
+                <li>Finalize technology stack selection</li>
+                <li>Design WebApp architecture framework</li>
+                <li>Research and select hardware components</li>
+              </ul>
+            </div>
+          }
         </div>
 
         <div class="timeline-phase" (click)="togglePhase(2)" [class.active]="currentPhase === 2">
@@ -124,14 +126,16 @@
               <span class="phase-duration">Sprint 3-4</span>
             </div>
           </div>
-          <div class="phase-details" *ngIf="currentPhase === 2">
-            <ul>
-              <li>Develop WebApp backend with user authentication</li>
-              <li>Implement database architecture</li>
-              <li>Assemble hardware prototype</li>
-              <li>Establish basic GPS data collection and transmission</li>
-            </ul>
-          </div>
+          @if (currentPhase === 2) {
+            <div class="phase-details">
+              <ul>
+                <li>Develop WebApp backend with user authentication</li>
+                <li>Implement database architecture</li>
+                <li>Assemble hardware prototype</li>
+                <li>Establish basic GPS data collection and transmission</li>
+              </ul>
+            </div>
+          }
         </div>
 
         <div class="timeline-phase" (click)="togglePhase(3)" [class.active]="currentPhase === 3">
@@ -142,14 +146,16 @@
               <span class="phase-duration">Sprint 5-6</span>
             </div>
           </div>
-          <div class="phase-details" *ngIf="currentPhase === 3">
-            <ul>
-              <li>Conduct hardware-software integration testing</li>
-              <li>Implement live mapping functionality</li>
-              <li>Develop trip history and basic analytics</li>
-              <li>Integrate security features including encryption</li>
-            </ul>
-          </div>
+          @if (currentPhase === 3) {
+            <div class="phase-details">
+              <ul>
+                <li>Conduct hardware-software integration testing</li>
+                <li>Implement live mapping functionality</li>
+                <li>Develop trip history and basic analytics</li>
+                <li>Integrate security features including encryption</li>
+              </ul>
+            </div>
+          }
         </div>
 
         <div class="timeline-phase" (click)="togglePhase(4)" [class.active]="currentPhase === 4">
@@ -160,14 +166,16 @@
               <span class="phase-duration">Sprint 7</span>
             </div>
           </div>
-          <div class="phase-details" *ngIf="currentPhase === 4">
-            <ul>
-              <li>Develop premium features including Driver Safety Score</li>
-              <li>Integrate vehicle database for Eco-Insights</li>
-              <li>Implement fleet management capabilities</li>
-              <li>Conduct comprehensive system testing</li>
-            </ul>
-          </div>
+          @if (currentPhase === 4) {
+            <div class="phase-details">
+              <ul>
+                <li>Develop premium features including Driver Safety Score</li>
+                <li>Integrate vehicle database for Eco-Insights</li>
+                <li>Implement fleet management capabilities</li>
+                <li>Conduct comprehensive system testing</li>
+              </ul>
+            </div>
+          }
         </div>
 
         <div class="timeline-phase" (click)="togglePhase(5)" [class.active]="currentPhase === 5">
@@ -178,14 +186,16 @@
               <span class="phase-duration">Sprint 8</span>
             </div>
           </div>
-          <div class="phase-details" *ngIf="currentPhase === 5">
-            <ul>
-              <li>Optimize system performance</li>
-              <li>Complete project documentation</li>
-              <li>Prepare final presentation materials</li>
-              <li>Demonstrate fully functional system</li>
-            </ul>
-          </div>
+          @if (currentPhase === 5) {
+            <div class="phase-details">
+              <ul>
+                <li>Optimize system performance</li>
+                <li>Complete project documentation</li>
+                <li>Prepare final presentation materials</li>
+                <li>Demonstrate fully functional system</li>
+              </ul>
+            </div>
+          }
         </div>
       </div>
     </div>

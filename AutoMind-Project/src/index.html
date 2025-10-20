@@ -5,12 +5,43 @@
   <title>AutoMind - Intelligent Vehicle System</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!-- CRITICAL: Prevent white background on mobile devices -->
+  <meta name="theme-color" content="#041024">
+  <meta name="msapplication-TileColor" content="#041024">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  
   <!-- favicons served from /favicon -->
   <link rel="icon" type="image/png" sizes="96x96" href="/favicon/favicon-96x96.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
   <link rel="shortcut icon" href="/favicon/favicon.ico">
+  
+  <style>
+    /* Immediate fix for white flash */
+    body {
+      background-color: #041024 !important;
+    }
+    
+    /* Prevent white background during page load */
+    .loading {
+      background: #041024;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 9999;
+    }
+  </style>
 </head>
 <body>
+  <div class="loading" id="loading"></div>
   <app-root></app-root>
+  <script>
+    // Remove loading screen once app is loaded
+    window.addEventListener('load', function() {
+      document.getElementById('loading').style.display = 'none';
+    });
+  </script>
 </body>
 </html>
