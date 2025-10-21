@@ -1,0 +1,159 @@
+<div class="auth-page">
+  <!-- Header -->
+  <header class="auth-header">
+    <div class="container">
+      <nav class="breadcrumb">
+        <a routerLink="/" class="breadcrumb-link">Home</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">Authentication</span>
+      </nav>
+      <div class="header-content">
+        <div class="logo-section">
+          <div class="project-logo">AutoMind</div>
+          <h1>Welcome Back</h1>
+          <p class="subtitle">Sign in to your account or create a new one</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Auth Container -->
+  <section class="auth-container">
+    <div class="container">
+      <div class="auth-card">
+        <!-- Mode Toggle -->
+        <div class="auth-mode-toggle">
+          <button 
+            class="mode-btn" 
+            [class.active]="authMode === 'login'"
+            (click)="switchAuthMode('login')">
+            Sign In
+          </button>
+          <button 
+            class="mode-btn" 
+            [class.active]="authMode === 'signup'"
+            (click)="switchAuthMode('signup')">
+            Sign Up
+          </button>
+        </div>
+
+        <!-- Login Form -->
+        <form *ngIf="authMode === 'login'" (ngSubmit)="onLogin()" class="auth-form">
+          <div class="form-group">
+            <label for="login-email">Email Address</label>
+            <input
+              type="email"
+              id="login-email"
+              [(ngModel)]="loginData.email"
+              name="email"
+              placeholder="Enter your email"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <input
+              type="password"
+              id="login-password"
+              [(ngModel)]="loginData.password"
+              name="password"
+              placeholder="Enter your password"
+              required
+            >
+          </div>
+
+          <div *ngIf="authError" class="error-message">
+            {{ authError }}
+          </div>
+
+          <button type="submit" class="btn-primary full-width" [disabled]="isLoading">
+            <span *ngIf="!isLoading">Sign In</span>
+            <span *ngIf="isLoading">Signing In...</span>
+          </button>
+
+          <div class="auth-links">
+            <p>Don't have an account? <a (click)="switchAuthMode('signup')">Sign up here</a></p>
+          </div>
+        </form>
+
+        <!-- Signup Form -->
+        <form *ngIf="authMode === 'signup'" (ngSubmit)="onSignup()" class="auth-form">
+          <div class="form-group">
+            <label for="signup-name">Full Name</label>
+            <input
+              type="text"
+              id="signup-name"
+              [(ngModel)]="signupData.name"
+              name="name"
+              placeholder="Enter your full name"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="signup-email">Email Address</label>
+            <input
+              type="email"
+              id="signup-email"
+              [(ngModel)]="signupData.email"
+              name="email"
+              placeholder="Enter your email"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="signup-password">Password</label>
+            <input
+              type="password"
+              id="signup-password"
+              [(ngModel)]="signupData.password"
+              name="password"
+              placeholder="Create password (min. 6 characters)"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="signup-confirm-password">Confirm Password</label>
+            <input
+              type="password"
+              id="signup-confirm-password"
+              [(ngModel)]="signupData.confirmPassword"
+              name="confirmPassword"
+              placeholder="Confirm your password"
+              required
+            >
+          </div>
+
+          <div *ngIf="authError" class="error-message">
+            {{ authError }}
+          </div>
+
+          <button type="submit" class="btn-primary full-width" [disabled]="isLoading">
+            <span *ngIf="!isLoading">Create Account</span>
+            <span *ngIf="isLoading">Creating Account...</span>
+          </button>
+
+          <div class="auth-links">
+            <p>Already have an account? <a (click)="switchAuthMode('login')">Sign in here</a></p>
+          </div>
+        </form>
+
+        <!-- Demo Info -->
+        <div class="demo-info">
+          <h4>Demo Information</h4>
+          <p>For testing purposes, use any valid email format and a password with at least 6 characters.</p>
+        </div>
+      </div>
+
+      <!-- Back to Home -->
+      <div class="back-home">
+        <button class="btn-outline" (click)="navigateToHome()">
+          ← Back to Home
+        </button>
+      </div>
+    </div>
+  </section>
+</div>

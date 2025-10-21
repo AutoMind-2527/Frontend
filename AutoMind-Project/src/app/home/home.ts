@@ -49,11 +49,8 @@ export class Home implements OnInit {
     });
   }
 
-  navigateAsUser(): void {
-    console.log('Navigating as logged in user');
-    this.closeModal();
-    this.router.navigate(['/dashboard'], { 
-      queryParams: { mode: 'authenticated' } 
-    });
-  }
+  navigateToAuth(): void {
+  this.closeModal();
+  this.router.navigate(['/auth']);
+}
 }
