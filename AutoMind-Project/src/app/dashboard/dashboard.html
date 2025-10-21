@@ -44,17 +44,41 @@
       <div class="map">
         <h2>Live Vehicle Map</h2>
         <div class="map-placeholder">
-          <div class="map-container">
-  <h2>Live Vehicle Map</h2>
-  <div id="map" class="leaflet-map"></div>
-</div>
-        <!-- <p>Map loading...</p> -->
+          <div id="map" class="leaflet-map"></div>
         </div>
       </div>
       <div class="charts">
         <h2>Performance Analytics</h2>
-        <div class="chart-placeholder">
-          <p>Max/min/length of the drive/</p>
+        <div class="analytics-container">
+          <div class="analytics-item">
+            <div class="analytics-icon">
+              <i class="fas fa-arrow-up"></i>
+            </div>
+            <div class="analytics-content">
+              <h3>Max Speed</h3>
+              <p class="analytics-value">120 <span>km/h</span></p>
+            </div>
+          </div>
+          
+          <div class="analytics-item">
+            <div class="analytics-icon min-icon">
+              <i class="fas fa-arrow-down"></i>
+            </div>
+            <div class="analytics-content">
+              <h3>Min Speed</h3>
+              <p class="analytics-value">15 <span>km/h</span></p>
+            </div>
+          </div>
+          
+          <div class="analytics-item">
+            <div class="analytics-icon distance-icon">
+              <i class="fas fa-route"></i>
+            </div>
+            <div class="analytics-content">
+              <h3>Trip Distance</h3>
+              <p class="analytics-value">45.3 <span>km</span></p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
