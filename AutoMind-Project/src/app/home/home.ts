@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
@@ -9,14 +9,37 @@ import { CommonModule } from '@angular/common';
   templateUrl: './home.html',
   styleUrls: ['./home.css']
 })
-export class Home implements OnInit {
+export class Home implements OnInit, AfterViewInit {
   showUserModal = false;
 
   constructor(private router: Router) {}
 
   ngOnInit() {
-    // Force set the body background on component initialization
+    this.scrollToTop();
     this.fixBodyBackground();
+  }
+
+  ngAfterViewInit() {
+    // Scroll again after view renders
+    setTimeout(() => {
+      this.scrollToTop();
+    }, 0);
+    
+    // One more check after a slightly longer delay
+    setTimeout(() => {
+      this.scrollToTop();
+    }, 100);
+  }
+  
+  private scrollToTop(): void {
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    
+    // More aggressive scrolling methods
+    if (document.scrollingElement) {
+      document.scrollingElement.scrollTop = 0;
+    }
   }
 
   private fixBodyBackground() {

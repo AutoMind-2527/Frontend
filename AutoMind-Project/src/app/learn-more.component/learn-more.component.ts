@@ -14,8 +14,6 @@ export class LearnMoreComponent implements OnInit {
   constructor(private router: Router) {}
 
   ngOnInit() {
-    // Scroll to top when component initializes
-    this.scrollToTop();
   }
 
   togglePhase(phase: number): void {
@@ -23,18 +21,6 @@ export class LearnMoreComponent implements OnInit {
   }
 
   navigateToHome(): void {
-    // Scroll to top first, then navigate
-    this.scrollToTop();
-    setTimeout(() => {
-      this.router.navigate(['/']);
-    }, 100); // Small delay to ensure scroll completes
-  }
-
-  private scrollToTop(): void {
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: 'smooth'
-    });
+    this.router.navigate(['/home']);
   }
 }
