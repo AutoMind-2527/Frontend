@@ -1,4 +1,18 @@
-<section class="hero">
+<!-- Floating site header (fixed) -->
+<header class="site-header" [class.visible]="headerVisible" [class.scrolled]="headerSmall">
+  <div class="site-container">
+    <div class="brand">
+      <div class="brand-name">AutoMind</div>
+      <div class="brand-motto">Intelligent Vehicle Monitoring</div>
+    </div>
+    <div class="floating-actions">
+      <button class="btn-primary" (click)="openUserModal()">Explore Dashboard</button>
+      <button class="btn-outline" routerLink="/learn-more">Learn More</button>
+    </div>
+  </div>
+</header>
+
+<section class="hero" #heroSection>
   <div class="hero-content">
     <h1>AutoMind</h1>
     <h2>Intelligent Vehicle Monitoring</h2>

@@ -12,9 +12,18 @@
 
 /* Header Styles */
 .auth-header {
+  /* make the header stretch full-viewport width while keeping centered content inside .container */
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  width: 100vw;
   padding: 2rem 0 1rem;
   background: linear-gradient(135deg, rgba(108,99,255,0.1) 0%, rgba(59,130,246,0.05) 100%);
   border-bottom: 1px solid rgba(255,255,255,0.1);
+  /* keep header above other content if overlapping occurs */
+  z-index: 1;
 }
 
 .breadcrumb {
