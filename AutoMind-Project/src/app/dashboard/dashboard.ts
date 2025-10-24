@@ -1,9 +1,11 @@
 import { Component, AfterViewInit } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import * as L from 'leaflet';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
+  imports: [RouterModule],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css']
 })
@@ -17,7 +19,7 @@ export class Dashboard implements AfterViewInit {
   }
 
   private initMap(): void {
-    const initialCoords: L.LatLngExpression = [48.137154, 11.576124];
+    const initialCoords: L.LatLngExpression = [48.2612, 14.2690];
 
     this.map = L.map('map', {
       center: initialCoords,

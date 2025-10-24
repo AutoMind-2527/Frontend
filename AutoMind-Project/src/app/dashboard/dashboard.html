@@ -5,11 +5,11 @@
     </div>
     <nav>
       <ul>
-        <li class="active"><i class="fas fa-tachometer-alt"></i> Overview</li>
-        <li><i class="fas fa-map-marker-alt"></i> Live Map</li>
-        <li><i class="fas fa-car"></i> Trips</li>
-        <li><i class="fas fa-chart-line"></i> Analytics</li>
-        <li><i class="fas fa-cog"></i> Settings</li>
+        <li class="active" routerLink="/dashboard" routerLinkActive="active"><i class="fas fa-tachometer-alt"></i> Dashboard</li>
+        <li routerLink="/live-map" routerLinkActive="active"><i class="fas fa-map-marker-alt"></i> Live Map</li>
+        <li routerLink="/trips" routerLinkActive="active"><i class="fas fa-car"></i> Trips</li>
+        <li routerLink="/analytics" routerLinkActive="active"><i class="fas fa-chart-line"></i> Analytics</li>
+        <li routerLink="/settings" routerLinkActive="active"><i class="fas fa-cog"></i> Settings</li>
       </ul>
     </nav>
   </aside>
@@ -65,7 +65,7 @@
               <i class="fas fa-arrow-down"></i>
             </div>
             <div class="analytics-content">
-              <h3>Min Speed</h3>
+              <h3>Average Speed</h3>
               <p class="analytics-value">15 <span>km/h</span></p>
             </div>
           </div>

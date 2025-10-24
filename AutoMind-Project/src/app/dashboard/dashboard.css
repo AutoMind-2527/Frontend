@@ -50,6 +50,8 @@
   gap: 10px;
   color: #d1d3e0;
   transition: background 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  user-select: none;
 }
 
 .sidebar nav ul li:hover,
