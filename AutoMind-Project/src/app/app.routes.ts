@@ -4,7 +4,7 @@ import { Dashboard } from './dashboard/dashboard';
 import { LearnMoreComponent } from './learn-more.component/learn-more.component';
 import { AuthComponent } from './auth/auth.component';
 import { LiveMap } from './live-map/live-map';
-import { TripsComponent } from './trips/trips';
+//import { TripsComponent } from './trips/trips';
 import { AnalyticsComponent } from './analytics/analytics';
 import { SettingsComponent } from './settings/settings';
 
@@ -13,7 +13,7 @@ export const routes: Routes = [
     { path: 'home', component: Home },
     { path: 'dashboard', component: Dashboard},
     { path: 'live-map', component: LiveMap },
-    { path: 'trips', component: TripsComponent },
+    //{ path: 'trips', component: TripsComponent },
     { path: 'analytics', component: AnalyticsComponent },
     { path: 'settings', component: SettingsComponent },
     { path: 'learn-more', component: LearnMoreComponent },
