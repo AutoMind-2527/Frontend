@@ -1,7 +1,146 @@
-.settings-container {
-  padding: 20px;
+/* FULL PAGE BACKGROUND */
+.page-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #050d1f, #0a142b);
+  color: white;
 }
 
-h1 {
-  color: #333;
+/* HEADER BAR */
+.top-bar {
+  width: 100%;
+  padding: 25px 40px;
+  display: flex;
+  align-items: center;
+}
+
+.brand {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #6c63ff;
+}
+
+/* SETTINGS LAYOUT */
+.settings-container {
+  width: 100%;
+  padding: 40px 60px;
+}
+
+.settings-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.settings-title {
+  font-size: 3rem;
+  font-weight: 800;
+  background: #6c63ff;
+  padding: 8px 18px;
+  border-radius: 6px;
+  display: inline-block;
+  color: white;
+}
+
+.settings-header p {
+  margin-top: 15px;
+  color: #b8b8b8;
+  font-size: 1.15rem;
+}
+
+/* GRID OF CARDS */
+.settings-grid {
+  display: flex;
+  gap: 40px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* CARD STYLE */
+.settings-card {
+  background: #161b2f;
+  padding: 28px;
+  border-radius: 18px;
+  width: 340px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  transition: 0.25s ease;
+}
+
+.settings-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 24px rgba(108, 99, 255, 0.35);
+}
+
+.settings-card h3 {
+  color: #6c63ff;
+  margin-bottom: 20px;
+  font-size: 1.4rem;
+}
+
+/* ROWS */
+.setting-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+  font-size: 1.1rem;
+}
+
+/* SWITCH */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 46px;
+  height: 24px;
+}
+
+.switch input {
+  display: none;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0;
+  right: 0; bottom: 0;
+  background-color: #444;
+  transition: .3s;
+  border-radius: 24px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  border-radius: 50%;
+  transition: .3s;
+}
+
+input:checked + .slider {
+  background-color: #6c63ff;
+}
+
+input:checked + .slider:before {
+  transform: translateX(22px);
+}
+
+/* LOGOUT BUTTON */
+.settings-btn {
+  width: 100%;
+  margin-top: 8px;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  background: #6c63ff;
+  color: white;
+  font-size: 1.05rem;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.settings-btn:hover {
+  background: #584ff2;
 }

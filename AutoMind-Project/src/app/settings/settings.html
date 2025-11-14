@@ -1,4 +1,57 @@
-<div class="settings-container">
-  <h1>Settings</h1>
-  <p>Hier kannst du deine Einstellungen verwalten</p>
+<div class="page-wrapper">
+
+  <!-- HEADER / NAV BRAND -->
+  <div class="logo">
+  <a routerLink="/home">AutoMind</a>
+</div>
+
+
+  <!-- CONTENT -->
+  <div class="settings-container">
+
+    <header class="settings-header">
+      <h2 class="settings-title">Settings</h2>
+      <p>Konfiguriere deine AutoMind Benutzer- und App-Einstellungen.</p>
+    </header>
+
+    <div class="settings-grid">
+
+      <!-- Account -->
+      <div class="settings-card">
+        <h3>Account</h3>
+        <div class="setting-row">
+          <span>Aktueller Benutzer:</span>
+          <strong>User / Guest</strong>
+        </div>
+        <button class="settings-btn">Logout</button>
+      </div>
+
+      <!-- Design -->
+      <div class="settings-card">
+        <h3>Design</h3>
+        <div class="setting-row">
+          <span>Dunkles Theme</span>
+          <label class="switch">
+            <input type="checkbox" [checked]="darkModeEnabled" (change)="toggleDarkMode()">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Privacy -->
+      <div class="settings-card">
+        <h3>Datenschutz</h3>
+        <div class="setting-row">
+          <span>Standortzugriff</span>
+          <label class="switch">
+            <input type="checkbox" [checked]="locationTracking" (change)="toggleLocation()">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
 </div>
