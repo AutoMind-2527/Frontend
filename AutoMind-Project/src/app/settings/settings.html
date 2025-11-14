@@ -1,57 +1,56 @@
-<div class="page-wrapper">
-
-  <!-- HEADER / NAV BRAND -->
-  <div class="logo">
-  <a routerLink="/home">AutoMind</a>
+<div class="top-bar">
+  <h1 class="logo" routerLink="/home">AutoMind</h1>
 </div>
 
+<div class="settings-container">
+  <h1 class="title">Settings</h1>
+  <p class="subtitle">Konfiguriere deine AutoMind Benutzer- und App-Einstellungen.</p>
 
-  <!-- CONTENT -->
-  <div class="settings-container">
+  <div class="settings-grid">
+    
+    <!-- Account -->
+    <div class="settings-card">
+      <h2>Account</h2>
+      <p>Aktueller Benutzer: <strong>User / Guest</strong></p>
+      <button class="logout-btn">Logout</button>
+    </div>
 
-    <header class="settings-header">
-      <h2 class="settings-title">Settings</h2>
-      <p>Konfiguriere deine AutoMind Benutzer- und App-Einstellungen.</p>
-    </header>
-
-    <div class="settings-grid">
-
-      <!-- Account -->
-      <div class="settings-card">
-        <h3>Account</h3>
-        <div class="setting-row">
-          <span>Aktueller Benutzer:</span>
-          <strong>User / Guest</strong>
-        </div>
-        <button class="settings-btn">Logout</button>
+    <!-- Design -->
+    <div class="settings-card">
+      <h2>Design</h2>
+      <div class="setting-row">
+        <span>Dunkles Theme</span>
+        <label class="switch">
+          <input type="checkbox">
+          <span class="slider"></span>
+        </label>
       </div>
+    </div>
 
-      <!-- Design -->
-      <div class="settings-card">
-        <h3>Design</h3>
-        <div class="setting-row">
-          <span>Dunkles Theme</span>
-          <label class="switch">
-            <input type="checkbox" [checked]="darkModeEnabled" (change)="toggleDarkMode()">
-            <span class="slider"></span>
-          </label>
-        </div>
+    <!-- Datenschutz -->
+    <div class="settings-card">
+      <h2>Datenschutz</h2>
+      <div class="setting-row">
+        <span>Standortzugriff</span>
+        <label class="switch">
+          <input type="checkbox">
+          <span class="slider"></span>
+        </label>
       </div>
-
-      <!-- Privacy -->
-      <div class="settings-card">
-        <h3>Datenschutz</h3>
-        <div class="setting-row">
-          <span>Standortzugriff</span>
-          <label class="switch">
-            <input type="checkbox" [checked]="locationTracking" (change)="toggleLocation()">
-            <span class="slider"></span>
-          </label>
-        </div>
-      </div>
-
     </div>
 
   </div>
-
 </div>
+
+<div class="settings-card">
+  <h2>Design</h2>
+
+  <label class="toggle-row">
+    Dunkles Theme
+    <label class="switch">
+      <input type="checkbox" [checked]="darkMode" (change)="toggleDarkMode()">
+      <span class="slider"></span>
+    </label>
+  </label>
+</div>
+

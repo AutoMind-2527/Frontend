@@ -122,3 +122,23 @@ p, h1, h2, h3, h4 {
   padding: 1rem;
   background: transparent;
 }
+
+body.dark-theme {
+    background: #0d1225;
+    color: white;
+}
+
+body:not(.dark-theme) {
+    background: white;
+    color: black;
+}
+
+/* Damit z.B. Cards sich anpassen */
+.dark-theme .settings-card {
+    background: #1a1f33;
+}
+
+body:not(.dark-theme) .settings-card {
+    background: #e8e8e8;
+    color: black;
+}

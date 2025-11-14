@@ -1,51 +1,40 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-settings',
   standalone: true,
+  imports: [RouterLink, NgClass],
   templateUrl: './settings.html',
   styleUrls: ['./settings.css']
 })
 export class SettingsComponent {
 
-  darkModeEnabled: boolean = false;
-  locationTracking: boolean = false;
+  darkMode: boolean = true;
+  locationAccess: boolean = false;
 
   constructor(private router: Router) {}
 
-  ngOnInit(): void {
-    // Werte aus LocalStorage laden
-    this.darkModeEnabled = localStorage.getItem('darkMode') === 'true';
-    this.locationTracking = localStorage.getItem('locationTracking') === 'true';
-
-    // Dark Mode sofort anwenden, falls aktiv
-    if (this.darkModeEnabled) {
-      document.body.classList.add('dark-theme');
-    }
-  }
-
-  toggleDarkMode() {
-    this.darkModeEnabled = !this.darkModeEnabled;
-    localStorage.setItem('darkMode', String(this.darkModeEnabled));
-
-    if (this.darkModeEnabled) {
-      document.body.classList.add('dark-theme');
-    } else {
-      document.body.classList.remove('dark-theme');
-    }
-  }
-
-  toggleLocation() {
-    this.locationTracking = !this.locationTracking;
-    localStorage.setItem('locationTracking', String(this.locationTracking));
-  }
-
-  logout() {
-    // Optional: User Session löschen
-    localStorage.removeItem('currentUser');
-
-    // Zu Home routen
+  // AutoMind Button → zurück zur Startseite
+  goHome() {
     this.router.navigate(['/home']);
+  }
+
+  // Dark Mode Toggle
+  toggleDarkMode() {
+    this.darkMode = !this.darkMode;
+    document.body.classList.toggle('dark-theme', this.darkMode);
+  }
+
+  // Datenschutz Toggle
+  toggleLocation() {
+    this.locationAccess = !this.locationAccess;
+  }
+
+  // Logout
+  logout() {
+    console.log('User logged out.');
+    this.router.navigate(['/login']);
   }
 }
