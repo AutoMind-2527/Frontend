@@ -21,7 +21,7 @@ export class SettingsComponent {
   ) {}
 
   ngOnInit() {
-    this.locationAccess = this.locationService.getTrackingStatus();
+   // this.locationAccess = this.locationService.getTrackingStatus();
   }
 
   goHome() {
@@ -37,9 +37,9 @@ export class SettingsComponent {
     this.locationAccess = !this.locationAccess;
 
     if (this.locationAccess) {
-      this.locationService.enableTracking();
+      //this.locationService.enableTracking();
     } else {
-      this.locationService.disableTracking();
+    // this.locationService.disableTracking();
     }
   }
 
