@@ -1,3 +1,4 @@
+// location.service.ts
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
@@ -5,104 +6,65 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class LocationService {
-
-  // Hält die aktuelle Position oder null (wenn Tracking deaktiviert)
-  private positionSubject = new BehaviorSubject<GeolocationPosition | null>(null);
-  position$ = this.positionSubject.asObservable();
-
+  public position$ = new BehaviorSubject<GeolocationPosition | null>(null);
   private watchId: number | null = null;
 
-  // Ob Tracking erlaubt ist (z.B. Settings Toggle)
-  private trackingEnabled: boolean = true;
-
   constructor() {
-    // Startet automatisch das Tracking, wenn erlaubt
-    if (this.trackingEnabled) {
-      this.startTracking();
-    }
+    this.startWatching();
   }
 
-  // Tracking EIN/AUS aus Settings
-  setTrackingEnabled(enabled: boolean): void {
-    this.trackingEnabled = enabled;
-
-    if (enabled) {
-      this.startTracking();
-    } else {
-      this.stopTracking();
-      this.positionSubject.next(null);  // Dashboard/Livemap bekommen "kein Standort"
-    }
-  }
-
-  startTracking(): void {
-    if (!this.trackingEnabled) return;
-
+  private startWatching(): void {
     if (!navigator.geolocation) {
-      console.error('Geolocation not supported');
+      console.error('Geolocation API nicht verfügbar');
       return;
     }
 
-    // Wenn schon aktiv → kein zweites Watch
-    if (this.watchId !== null) return;
+    console.log('🚀 Starte direkte Geolocation...');
+
+    // STOPPE erst alle vorhandenen Watcher
+    if (this.watchId !== null) {
+      navigator.geolocation.clearWatch(this.watchId);
+    }
 
     this.watchId = navigator.geolocation.watchPosition(
       (position) => {
-        if (this.trackingEnabled) {
-          console.log('New position:', position.coords.accuracy + 'm accuracy');
-          this.positionSubject.next(position);
-        }
+        console.log('🎯 DIREKTE POSITION:', {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+          accuracy: position.coords.accuracy + 'm',
+          zeit: new Date().toLocaleTimeString()
+        });
+        this.position$.next(position);
       },
       (error) => {
-        console.error('Geolocation error:', error);
-        this.handleLocationError(error);
+        console.error('❌ DIREKTER FEHLER:', error);
       },
       {
-        enableHighAccuracy: true,
-        maximumAge: 5000,      // Reduziert von 10000 auf 5000 ms (frischer)
-        timeout: 15000         // Erhöht auf 15 Sekunden für bessere Genauigkeit
+        enableHighAccuracy: true,    // WICHTIGSTE EINSTELLUNG
+        timeout: 30000,              // 30 Sekunden warten für GPS
+        maximumAge: 0                // IMMER neue Position
       }
     );
   }
 
-  // Manuelle Standortabfrage mit höchster Genauigkeit
-  getHighAccuracyPosition(): Promise<GeolocationPosition> {
+  // Manuell aktualisieren
+  public async updateLocation(): Promise<void> {
     return new Promise((resolve, reject) => {
-      if (!navigator.geolocation) {
-        reject(new Error('Geolocation not supported'));
-        return;
-      }
-
       navigator.geolocation.getCurrentPosition(
-        resolve,
-        reject,
+        (position) => {
+          this.position$.next(position);
+          resolve();
+        },
+        (error) => {
+          console.error('Manuelle Aktualisierung fehlgeschlagen:', error);
+          reject(error);
+        },
         {
           enableHighAccuracy: true,
-          maximumAge: 0,       // Immer frische Position
-          timeout: 20000       // Noch länger warten für beste Genauigkeit
+          timeout: 30000,
+          maximumAge: 0
         }
       );
     });
-  }
-
-  private handleLocationError(error: GeolocationPositionError): void {
-    switch (error.code) {
-      case error.PERMISSION_DENIED:
-        console.error('Location access denied by user');
-        break;
-      case error.POSITION_UNAVAILABLE:
-        console.error('Location information unavailable');
-        break;
-      case error.TIMEOUT:
-        console.error('Location request timeout');
-        // Optional: Retry logic hier einfügen
-        break;
-    }
-  }
-
-  stopTracking(): void {
-    if (this.watchId !== null) {
-      navigator.geolocation.clearWatch(this.watchId);
-      this.watchId = null;
-    }
   }
 }
