@@ -48,18 +48,55 @@ export class LocationService {
     this.watchId = navigator.geolocation.watchPosition(
       (position) => {
         if (this.trackingEnabled) {
+          console.log('New position:', position.coords.accuracy + 'm accuracy');
           this.positionSubject.next(position);
         }
       },
       (error) => {
         console.error('Geolocation error:', error);
+        this.handleLocationError(error);
       },
       {
         enableHighAccuracy: true,
-        maximumAge: 10000,
-        timeout: 10000
+        maximumAge: 5000,      // Reduziert von 10000 auf 5000 ms (frischer)
+        timeout: 15000         // Erhöht auf 15 Sekunden für bessere Genauigkeit
       }
     );
+  }
+
+  // Manuelle Standortabfrage mit höchster Genauigkeit
+  getHighAccuracyPosition(): Promise<GeolocationPosition> {
+    return new Promise((resolve, reject) => {
+      if (!navigator.geolocation) {
+        reject(new Error('Geolocation not supported'));
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        resolve,
+        reject,
+        {
+          enableHighAccuracy: true,
+          maximumAge: 0,       // Immer frische Position
+          timeout: 20000       // Noch länger warten für beste Genauigkeit
+        }
+      );
+    });
+  }
+
+  private handleLocationError(error: GeolocationPositionError): void {
+    switch (error.code) {
+      case error.PERMISSION_DENIED:
+        console.error('Location access denied by user');
+        break;
+      case error.POSITION_UNAVAILABLE:
+        console.error('Location information unavailable');
+        break;
+      case error.TIMEOUT:
+        console.error('Location request timeout');
+        // Optional: Retry logic hier einfügen
+        break;
+    }
   }
 
   stopTracking(): void {
