@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
 import { NgClass } from '@angular/common';
+import { LocationService } from '../services/location.service';
 
 @Component({
   selector: 'app-settings',
@@ -14,25 +15,34 @@ export class SettingsComponent {
   darkMode: boolean = true;
   locationAccess: boolean = false;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private locationService: LocationService
+  ) {}
 
-  // AutoMind Button → zurück zur Startseite
+  ngOnInit() {
+    this.locationAccess = this.locationService.getTrackingStatus();
+  }
+
   goHome() {
     this.router.navigate(['/home']);
   }
 
-  // Dark Mode Toggle
   toggleDarkMode() {
     this.darkMode = !this.darkMode;
     document.body.classList.toggle('dark-theme', this.darkMode);
   }
 
-  // Datenschutz Toggle
   toggleLocation() {
     this.locationAccess = !this.locationAccess;
+
+    if (this.locationAccess) {
+      this.locationService.enableTracking();
+    } else {
+      this.locationService.disableTracking();
+    }
   }
 
-  // Logout
   logout() {
     console.log('User logged out.');
     this.router.navigate(['/login']);

@@ -1,34 +1,33 @@
-import { Component, AfterViewInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, AfterViewInit } from '@angular/core';
+import { RouterLink, Router } from '@angular/router';
 import * as L from 'leaflet';
 import { LocationService } from '../services/location.service';
-import { Subscription } from 'rxjs';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'app-live-map',
+  selector: 'app-livemap',
   standalone: true,
+  imports: [RouterLink, NgIf],
   templateUrl: './live-map.html',
   styleUrls: ['./live-map.css']
 })
-export class LiveMap implements AfterViewInit, OnDestroy {
+export class LiveMap implements AfterViewInit {
+
   private map!: L.Map;
   private marker!: L.Marker;
-  private locationSub!: Subscription;
 
-  constructor(private router: Router, private locationService: LocationService) {}
+  constructor(private locationService: LocationService, private router: Router) {}
 
   ngAfterViewInit(): void {
     this.initMap();
 
-    this.locationSub = this.locationService.location$.subscribe(coords => {
-      if (coords) {
-        this.updateMarker(coords.latitude, coords.longitude);
-      }
-    });
-  }
+    this.locationService.position$.subscribe(pos => {
+      if (!pos) return;
 
-  ngOnDestroy(): void {
-    if (this.locationSub) this.locationSub.unsubscribe();
+      const coords = [pos.coords.latitude, pos.coords.longitude] as L.LatLngExpression;
+      this.marker.setLatLng(coords);
+      this.map.setView(coords, 15);
+    });
   }
 
   private initMap(): void {
@@ -38,33 +37,28 @@ export class LiveMap implements AfterViewInit, OnDestroy {
     });
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '© OpenStreetMap contributors'
+      maxZoom: 19
     }).addTo(this.map);
-  }
 
-  private updateMarker(lat: number, lng: number): void {
     const pinIcon = L.divIcon({
       className: 'custom-pin-marker',
-      html: `<svg width="24" height="32" viewBox="0 0 32 44" xmlns="http://www.w3.org/2000/svg">
-        <path d="M16 0C7.2 0 0 7.2 0 16c0 11 16 28 16 28s16-17 16-28C32 7.2 24.8 0 16 0z"
-              fill="#6c63ff" stroke="#fff" stroke-width="2"/>
-        <circle cx="16" cy="16" r="6" fill="#fff"/>
-      </svg>`,
+      html: `
+        <svg width="24" height="32" viewBox="0 0 32 44">
+          <path d="M16 0C7.2 0 0 7.2 0 16c0 11 16 28 16 28s16-17 16-28C32 7.2 24.8 0 16 0z"
+            fill="#6c63ff"
+            stroke="#fff"
+            stroke-width="2"
+            filter="drop-shadow(0 2px 6px rgba(0,0,0,0.3))"/>
+          <circle cx="16" cy="16" r="6" fill="#fff"/>
+        </svg>`,
       iconSize: [24, 32],
       iconAnchor: [12, 32]
     });
 
-    if (!this.marker) {
-      this.marker = L.marker([lat, lng], { icon: pinIcon }).addTo(this.map);
-    } else {
-      this.marker.setLatLng([lat, lng]);
-    }
-
-    this.map.setView([lat, lng], 15);
+    this.marker = L.marker([48.2612, 14.2690], { icon: pinIcon }).addTo(this.map);
   }
 
-  goHome(): void {
+  goHome() {
     this.router.navigate(['/home']);
   }
 }

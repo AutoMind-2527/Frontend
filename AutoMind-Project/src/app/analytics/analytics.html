@@ -1,21 +1,36 @@
-<div class="logo">
-      <h2 onclick="window.location.href='home'" style="cursor: pointer;">AutoMind</h2>
-    </div>
+<div class="top-bar">
+  <h1 class="logo" routerLink="/home">AutoMind</h1>
+</div>
+
 <div class="analytics-container">
-  <header class="analytics-header">
-    <h1>Analytics</h1>
-    <p>Hier werden zukünftig Analysen und Fahrzeugdaten angezeigt.</p>
-  </header>
+  <h1 class="title">Analytics</h1>
+  <p class="subtitle">Übersicht über System- & Fahrzeugdaten.</p>
 
-  <div class="analytics-content">
+  <div class="analytics-grid">
+
+    <!-- Card 1 -->
     <div class="analytics-card">
-      <h2>🚗 Fahrzeugdaten</h2>
-      <p>Bald verfügbar...</p>
+      <h2>Aktuelle Geschwindigkeit</h2>
+      <p class="value">{{ speed }} km/h</p>
     </div>
 
+    <!-- Card 2 -->
     <div class="analytics-card">
-      <h2>📈 Statistiken</h2>
-      <p>Bald verfügbar...</p>
+      <h2>Gefahrene Distanz</h2>
+      <p class="value">{{ distance }} km</p>
     </div>
+
+    <!-- Card 3 -->
+    <div class="analytics-card">
+      <h2>Systemstatus</h2>
+      <p class="value status-ok">OK</p>
+    </div>
+
+  </div>
+
+  <!-- Mini Diagramm -->
+  <div class="chart-card">
+    <h2>Speed Verlauf</h2>
+    <canvas id="speedChart"></canvas>
   </div>
 </div>

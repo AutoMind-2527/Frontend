@@ -1,0 +1,98 @@
+:host {
+  display: block;
+  height: 100vh;
+  width: 100vw;
+  background: linear-gradient(135deg, #0b1220, #08101c 60%);
+  overflow-y: auto;
+  padding: 0;
+  margin: 0;
+}
+
+/* Top */
+.top-bar {
+  width: 100%;
+  padding: 20px 40px;
+}
+
+.logo {
+  font-size: 28px;
+  font-weight: 700;
+  color: #6c63ff;
+  cursor: pointer;
+}
+
+/* Container */
+.analytics-container {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.title {
+  font-size: 42px;
+  font-weight: 800;
+  color: white;
+  background: #6c63ff;
+  padding: 8px 24px;
+  display: inline-block;
+  border-radius: 12px;
+}
+
+.subtitle {
+  margin-top: 10px;
+  color: #ccc;
+}
+
+/* Grid */
+.analytics-grid {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.analytics-card {
+  width: 300px;
+  padding: 25px;
+  background: #151a2e;
+  border-radius: 16px;
+  color: white;
+  box-shadow: 0 0 12px rgba(0,0,0,0.3);
+}
+
+.analytics-card h2 {
+  color: #7b74ff;
+  margin-bottom: 10px;
+}
+
+.value {
+  font-size: 32px;
+  font-weight: 700;
+  margin-top: 10px;
+}
+
+.status-ok {
+  color: #4ced73;
+}
+
+/* Chart */
+.chart-card {
+  width: 80%;
+  max-width: 900px;
+  margin: 50px auto;
+  padding: 30px;
+  background: #151a2e;
+  border-radius: 18px;
+  box-shadow: 0 0 12px rgba(0,0,0,0.3);
+  color: white;
+}
+
+.chart-card h2 {
+  color: #7b74ff;
+  margin-bottom: 20px;
+}
+
+canvas {
+  width: 100%;
+  height: 250px;
+}
