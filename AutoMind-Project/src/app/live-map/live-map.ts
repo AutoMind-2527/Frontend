@@ -74,16 +74,6 @@ export class LiveMap implements AfterViewInit, OnDestroy {
     
     console.log(`🎯 MAP UPDATE: ${lat}, ${lng} (${position.coords.accuracy}m)`);
 
-    // ✅ IMMER: Marker bewegen
-    this.marker.setLatLng([lat, lng]);
-    this.marker.bindPopup(`
-      <div style="text-align: center;">
-        <strong>Deine Position</strong><br>
-        📍 ${lat.toFixed(6)}, ${lng.toFixed(6)}<br>
-        ⚡ Genauigkeit: ${position.coords.accuracy.toFixed(0)}m
-      </div>
-    `);
-
     // ✅ NUR beim ERSTEN Mal: Karte zentrieren
     if (!this.initialPositionSet) {
       console.log('🎯 ERSTE POSITION - Zentriere Karte');
