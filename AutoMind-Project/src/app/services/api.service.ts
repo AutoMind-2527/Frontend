@@ -1,13 +1,46 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class ApiService {
-  private apiUrl = 'http://localhost:5191'; // Backend Port
-  
+
+  private baseUrl = 'http://localhost:5191';
+
   constructor(private http: HttpClient) {}
-  
-  getData() {
-    return this.http.get(`${this.apiUrl}/api/controller`);
+
+  private getHeaders() {
+    const token = sessionStorage.getItem('token');
+
+    return new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+  }
+
+  // ---- Trips ----
+  getTrips() {
+    return this.http.get(`${this.baseUrl}/api/Trips`, {
+      headers: this.getHeaders()
+    });
+  }
+
+  createTrip(body: any) {
+    return this.http.post(`${this.baseUrl}/api/Trips`, body, {
+      headers: this.getHeaders()
+    });
+  }
+
+  // ---- Vehicles ----
+  getVehicles() {
+    return this.http.get(`${this.baseUrl}/api/Vehicles`, {
+      headers: this.getHeaders()
+    });
+  }
+
+  createVehicle(body: any) {
+    return this.http.post(`${this.baseUrl}/api/Vehicles`, body, {
+      headers: this.getHeaders()
+    });
   }
 }
