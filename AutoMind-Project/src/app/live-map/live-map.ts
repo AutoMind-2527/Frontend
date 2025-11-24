@@ -1,3 +1,4 @@
+// live-map.ts - KORRIGIERT
 import { Component, AfterViewInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import * as L from 'leaflet';
@@ -13,6 +14,7 @@ export class LiveMap implements AfterViewInit, OnDestroy {
   private map!: L.Map;
   private marker!: L.Marker;
   private subscription!: Subscription;
+  private initialPositionSet = false;
 
   constructor(private locationService: LocationService, private router: Router) {}
 
@@ -22,7 +24,8 @@ export class LiveMap implements AfterViewInit, OnDestroy {
   }
 
   private initializeMap(): void {
-    this.map = L.map('map').setView([0, 0], 16); // Start mit 0,0 - wird sofort überschrieben
+    // Start mit Berlin als Fallback
+    this.map = L.map('map').setView([52.5200, 13.4050], 13);
     
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap'
@@ -32,19 +35,24 @@ export class LiveMap implements AfterViewInit, OnDestroy {
     const pinIcon = L.divIcon({
       className: 'custom-pin-marker',
       html: `
-        <svg width="24" height="32" viewBox="0 0 32 44">
-          <path d="M16 0C7.2 0 0 7.2 0 16c0 11 16 28 16 28s16-17 16-28C32 7.2 24.8 0 16 0z"
-            fill="#6c63ff"
-            stroke="#fff"
-            stroke-width="2"/>
-          <circle cx="16" cy="16" r="6" fill="#fff"/>
-        </svg>`,
-      iconSize: [24, 32],
-      iconAnchor: [12, 32]
+        <div style="
+          background: #7b61ff;
+          border: 3px solid white;
+          border-radius: 50%;
+          width: 20px;
+          height: 20px;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        "></div>
+      `,
+      iconSize: [20, 20],
+      iconAnchor: [10, 10]
     });
 
-    // Erstelle Marker mit benutzerdefiniertem Icon (Position wird später gesetzt)
-    this.marker = L.marker([0, 0], { icon: pinIcon }).addTo(this.map);
+    // Marker erstellen (Position wird durch Location Service gesetzt)
+    this.marker = L.marker([52.5200, 13.4050], { icon: pinIcon })
+      .addTo(this.map)
+      .bindPopup('Deine Position wird geladen...')
+      .openPopup();
   }
 
   private subscribeToLocation(): void {
@@ -64,18 +72,28 @@ export class LiveMap implements AfterViewInit, OnDestroy {
     const lat = position.coords.latitude;
     const lng = position.coords.longitude;
     
-    console.log(`📍 MAP UPDATE: ${lat}, ${lng} (${position.coords.accuracy}m)`);
+    console.log(`🎯 MAP UPDATE: ${lat}, ${lng} (${position.coords.accuracy}m)`);
 
-    // Marker bewegen
+    // ✅ IMMER: Marker bewegen
     this.marker.setLatLng([lat, lng]);
+    this.marker.bindPopup(`
+      <div style="text-align: center;">
+        <strong>Deine Position</strong><br>
+        📍 ${lat.toFixed(6)}, ${lng.toFixed(6)}<br>
+        ⚡ Genauigkeit: ${position.coords.accuracy.toFixed(0)}m
+      </div>
+    `);
 
-    // Karte zentrieren (mit Animation wie im zweiten Beispiel)
-    this.map.setView([lat, lng], 18, { animate: true });
+    // ✅ NUR beim ERSTEN Mal: Karte zentrieren
+    if (!this.initialPositionSet) {
+      console.log('🎯 ERSTE POSITION - Zentriere Karte');
+      this.map.setView([lat, lng], 16, { animate: true });
+      this.initialPositionSet = true;
+    }
 
-
-    // Karten-Größe neu berechnen (falls nötig)
+    // Karten-Größe anpassen
     setTimeout(() => {
-      try { this.map.invalidateSize(); } catch (e) { /* ignore */ }
+      this.map.invalidateSize();
     }, 100);
   }
 

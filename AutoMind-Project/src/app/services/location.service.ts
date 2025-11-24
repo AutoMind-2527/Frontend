@@ -1,4 +1,4 @@
-// location.service.ts
+// location.service.ts - VOLLSTÄNDIGE VERSION
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
@@ -14,37 +14,91 @@ export class LocationService {
   }
 
   private startWatching(): void {
+    console.log('🔍 Starte erweiterte GPS-Diagnose...');
+
+    // Prüfe ob Geolocation verfügbar ist
     if (!navigator.geolocation) {
-      console.error('Geolocation API nicht verfügbar');
+      console.error('❌ Geolocation API nicht verfügbar');
+      alert('Geolocation wird von diesem Browser nicht unterstützt!');
       return;
     }
 
-    console.log('🚀 Starte direkte Geolocation...');
+    // Teste mit getCurrentPosition zuerst
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        console.log('✅ GET_CURRENT_POSITION ERFOLGREICH:', {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+          accuracy: position.coords.accuracy + 'm',
+          altitude: position.coords.altitude,
+          heading: position.coords.heading,
+          speed: position.coords.speed
+        });
+        
+        // Starte watchPosition erst nach erfolgreichem Test
+        this.startWatchingInternal();
+        
+        // Sende die erste Position sofort
+        this.position$.next(position);
+      },
+      (error) => {
+        console.error('❌ GET_CURRENT_POSITION FEHLER:', this.getErrorText(error));
+        alert(`GPS Fehler: ${this.getErrorText(error)}\n\nStelle sicher dass:\n- Standortzugriff erlaubt ist\n- GPS eingenschaltet ist\n- Internet verfügbar ist`);
+        
+        // Trotzdem versuchen watchPosition zu starten (mit weniger strengen Einstellungen)
+        this.startWatchingInternal();
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 0
+      }
+    );
+  }
 
-    // STOPPE erst alle vorhandenen Watcher
+  private startWatchingInternal(): void {
+    // Stoppe vorhandenen Watcher
     if (this.watchId !== null) {
       navigator.geolocation.clearWatch(this.watchId);
     }
 
     this.watchId = navigator.geolocation.watchPosition(
       (position) => {
-        console.log('🎯 DIREKTE POSITION:', {
+        const accuracy = position.coords.accuracy;
+        
+        console.log('📍 GPS POSITION:', {
           lat: position.coords.latitude,
-          lng: position.coords.longitude,
-          accuracy: position.coords.accuracy + 'm',
-          zeit: new Date().toLocaleTimeString()
+          lng: position.coords.longitude, 
+          accuracy: accuracy + 'm',
+          source: accuracy < 50 ? '📡 GPS' : '🌐 NETWORK',
+          timestamp: new Date().toLocaleTimeString()
         });
+
+        // Warnung bei schlechter Genauigkeit
+        if (accuracy > 100) {
+          console.warn('⚠️ UNGENAU: Mehr als 100m Abweichung!');
+        }
+
         this.position$.next(position);
       },
       (error) => {
-        console.error('❌ DIREKTER FEHLER:', error);
+        console.error('❌ WATCH_POSITION FEHLER:', this.getErrorText(error));
       },
       {
-        enableHighAccuracy: true,    // WICHTIGSTE EINSTELLUNG
-        timeout: 30000,              // 30 Sekunden warten für GPS
-        maximumAge: 0                // IMMER neue Position
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 10000
       }
     );
+  }
+
+  private getErrorText(error: GeolocationPositionError): string {
+    switch(error.code) {
+      case 1: return 'PERMISSION_DENIED - Standortzugriff verweigert';
+      case 2: return 'POSITION_UNAVAILABLE - Position nicht verfügbar';
+      case 3: return 'TIMEOUT - Zeitüberschreitung';
+      default: return `Unbekannter Fehler: ${error.code}`;
+    }
   }
 
   // Manuell aktualisieren
@@ -52,6 +106,11 @@ export class LocationService {
     return new Promise((resolve, reject) => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
+          console.log('🔄 MANUELLE AKTUALISIERUNG:', {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+            accuracy: position.coords.accuracy + 'm'
+          });
           this.position$.next(position);
           resolve();
         },
@@ -61,7 +120,7 @@ export class LocationService {
         },
         {
           enableHighAccuracy: true,
-          timeout: 30000,
+          timeout: 15000,
           maximumAge: 0
         }
       );
