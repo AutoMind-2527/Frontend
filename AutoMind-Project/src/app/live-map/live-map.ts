@@ -72,14 +72,6 @@ export class LiveMap implements AfterViewInit, OnDestroy {
     // Karte zentrieren (mit Animation wie im zweiten Beispiel)
     this.map.setView([lat, lng], 18, { animate: true });
 
-    // Popup mit Info
-    this.marker.bindPopup(`
-      <b>Dein Standort</b><br>
-      Breite: ${lat.toFixed(6)}<br>
-      Länge: ${lng.toFixed(6)}<br>
-      Genauigkeit: ${position.coords.accuracy}m<br>
-      Zeit: ${new Date().toLocaleTimeString()}
-    `).openPopup();
 
     // Karten-Größe neu berechnen (falls nötig)
     setTimeout(() => {
