@@ -253,3 +253,23 @@
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
+
+.error-banner {
+  background: #ff4d4f33;
+  border: 1px solid #ff4d4f;
+  color: #ffb3b5;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.list li {
+  padding: 0.4rem 0;
+  border-bottom: 1px solid #2a2f45;
+  font-size: 0.9rem;
+}

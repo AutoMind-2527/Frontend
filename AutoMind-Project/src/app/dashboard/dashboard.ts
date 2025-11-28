@@ -1,31 +1,111 @@
-import { Component, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, OnInit } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
 import * as L from 'leaflet';
 import { LocationService } from '../services/location.service';
-import { NgIf } from '@angular/common';
+import { NgIf, NgForOf, DecimalPipe, DatePipe, SlicePipe } from '@angular/common';
 import { Subscription } from 'rxjs';
+import { ApiService } from '../services/api.service';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [RouterLink, NgIf],
+  imports: [
+    RouterLink,
+    NgIf,
+    NgForOf,
+    DecimalPipe,
+    DatePipe,
+    SlicePipe
+  ],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css']
 })
-export class Dashboard implements AfterViewInit, OnDestroy {
+export class Dashboard implements OnInit, AfterViewInit, OnDestroy {
 
+  // --- Map ---
   private map!: L.Map;
   private marker!: L.Marker;
   private locationSub!: Subscription;
 
-  constructor(private locationService: LocationService, private router: Router) {}
+  // --- Daten aus Backend ---
+  vehicles: any[] = [];
+  trips: any[] = [];
+  currentUser: any | null = null;
 
+  // --- Stats ---
+  totalDistanceKm = 0;
+  isLoading = true;
+  hasError = false;
+
+  constructor(
+    private locationService: LocationService,
+    private router: Router,
+    private api: ApiService
+  ) {}
+
+  // -----------------------------
+  // 1. Beim Laden -> Daten holen
+  // -----------------------------
+  ngOnInit(): void {
+    this.loadDashboardData();
+  }
+
+  private loadDashboardData(): void {
+    this.isLoading = true;
+    this.hasError = false;
+
+    // Fahrzeuge laden
+    this.api.getVehicles().subscribe({
+      next: (vehicles: any) => {
+        this.vehicles = vehicles || [];
+      },
+      error: (err) => {
+        console.error('Error loading vehicles', err);
+        this.hasError = true;
+      }
+    });
+
+    // Trips laden
+    this.api.getTrips().subscribe({
+      next: (trips: any) => {
+        this.trips = trips || [];
+        this.recalculateStats();
+      },
+      error: (err) => {
+        console.error('Error loading trips', err);
+        this.hasError = true;
+      }
+    });
+
+    // Aktuellen User laden
+    this.api.getCurrentUser().subscribe({
+      next: (user: any) => {
+        this.currentUser = user;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error loading current user', err);
+        this.hasError = true;
+        this.isLoading = false;
+      }
+    });
+  }
+
+  private recalculateStats(): void {
+    this.totalDistanceKm = this.trips.reduce(
+      (sum, t: any) => sum + (t.distanceKm ?? 0),
+      0
+    );
+  }
+
+  // -----------------------------
+  // 2. Map/Leaflet initialisieren
+  // -----------------------------
   ngAfterViewInit(): void {
     this.initMap();
 
     // Subscription: reagiere auf Positionsupdates vom LocationService
     this.locationSub = this.locationService.position$.subscribe(pos => {
-      // pos kann null sein (wenn Tracking deaktiviert) — dann nichts tun
       if (!pos) {
         return;
       }
@@ -73,7 +153,7 @@ export class Dashboard implements AfterViewInit, OnDestroy {
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(this.map);
 
-    // Füge initialen Marker (optional) — bleibt, bis service liefert
+    // Optionaler Startmarker
     const pinIcon = L.divIcon({
       className: 'custom-pin-marker',
       html: `
@@ -90,10 +170,8 @@ export class Dashboard implements AfterViewInit, OnDestroy {
 
     this.marker = L.marker(initialCoords, { icon: pinIcon }).addTo(this.map);
 
-    // Wichtig: falls die Komponente in einem flex/hidden Container gerendert wurde,
-    // zwinge Leaflet später zur Neuberechnung
     setTimeout(() => {
-      try { this.map.invalidateSize(); } catch (e) { /* ignore */ }
+      try { this.map.invalidateSize(); } catch (e) {}
     }, 200);
   }
 
@@ -102,7 +180,6 @@ export class Dashboard implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Aufräumen: Subscription canceln
     if (this.locationSub) {
       this.locationSub.unsubscribe();
     }

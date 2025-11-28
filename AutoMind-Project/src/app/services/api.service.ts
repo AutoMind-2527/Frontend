@@ -6,6 +6,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 })
 export class ApiService {
 
+  // ⚠️ Falls dein Backend auf einem anderen Port läuft -> hier anpassen
   private baseUrl = 'http://localhost:5191';
 
   constructor(private http: HttpClient) {}
@@ -15,6 +16,13 @@ export class ApiService {
 
     return new HttpHeaders({
       'Authorization': `Bearer ${token}`
+    });
+  }
+
+  // ---- Auth / aktueller User ----
+  getCurrentUser() {
+    return this.http.get(`${this.baseUrl}/api/Auth/me`, {
+      headers: this.getHeaders()
     });
   }
 
