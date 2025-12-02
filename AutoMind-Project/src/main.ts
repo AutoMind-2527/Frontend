@@ -13,6 +13,7 @@ keycloak
   .init({
     onLoad: 'login-required',   // User MUSS eingeloggt sein
     pkceMethod: 'S256'
+    
   })
   .then((authenticated) => {
     if (!authenticated) {

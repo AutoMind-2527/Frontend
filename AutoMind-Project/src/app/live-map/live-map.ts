@@ -48,7 +48,6 @@ export class LiveMap implements AfterViewInit, OnDestroy {
       iconAnchor: [10, 10]
     });
 
-    // Marker erstellen (Position wird durch Location Service gesetzt)
     this.marker = L.marker([52.5200, 13.4050], { icon: pinIcon })
       .addTo(this.map)
       .bindPopup('Deine Position wird geladen...')
