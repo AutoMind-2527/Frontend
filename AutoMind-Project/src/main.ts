@@ -3,6 +3,7 @@ import { appConfig } from './app/app.config';
 import { App } from './app/app';
 import Keycloak from 'keycloak-js';
 
+/*
 const keycloak = new Keycloak({
   url: 'http://localhost:8080',
   realm: 'automind-realm',
@@ -27,4 +28,4 @@ keycloak
 
     return bootstrapApplication(App, appConfig);
   })
-  .catch((err) => console.error('Keycloak init error', err));
+  .catch((err) => console.error('Keycloak init error', err));*/
