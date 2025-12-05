@@ -7,6 +7,7 @@ import { LiveMap } from './live-map/live-map';
 //import { TripsComponent } from './trips/trips';
 import { AnalyticsComponent } from './analytics/analytics';
 import { SettingsComponent } from './settings/settings';
+import { DashboardGuest } from './dashboard-guest/dashboard-guest';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -17,5 +18,6 @@ export const routes: Routes = [
     { path: 'analytics', component: AnalyticsComponent },
     { path: 'settings', component: SettingsComponent },
     { path: 'learn-more', component: LearnMoreComponent },
-    { path: 'auth', component: AuthComponent }
+    { path: 'auth', component: AuthComponent },
+    { path: 'guest-dashboard', component: DashboardGuest } // Neue Route für Gast-Dashboard
 ];

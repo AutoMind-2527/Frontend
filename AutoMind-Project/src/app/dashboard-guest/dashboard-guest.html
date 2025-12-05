@@ -1,0 +1,123 @@
+<div class="dashboard-container">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">
+      <h2 routerLink="/home" style="cursor: pointer;">AutoMind</h2>
+    </div>
+    <nav>
+      <ul>
+        <li class="active" routerLink="/dashboard" routerLinkActive="active">
+          <i class="fas fa-tachometer-alt"></i> Dashboard
+        </li>
+        <li routerLink="/live-map" routerLinkActive="active">
+          <i class="fas fa-map-marker-alt"></i> Live Map
+        </li>
+        <li routerLink=  routerLinkActive="active">
+          <i class="fas fa-chart-line"></i> Analytics
+        </li>
+        <li routerLink="/settings" routerLinkActive="active">
+          <i class="fas fa-cog"></i> Settings
+        </li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <main class="dashboard-main">
+    <!-- Topbar -->
+    <header class="topbar">
+      <h1>Dashboard Overview</h1>
+      <div class="user-panel">
+        <span class="username" *ngIf="currentUser; else guestLabel">
+          {{ currentUser.username }} ({{ currentUser.role }})
+        </span>
+        <ng-template #guestLabel>
+          <span class="username">[Guest]</span>
+        </ng-template>
+      </div>
+    </header>
+
+    <!-- Fehlermeldung -->
+    <div *ngIf="hasError" class="error-banner">
+      Im Guest Modus sind Daten leider nicht verfügbar
+    </div>
+
+    <!-- Quick Stats -->
+    <section class="stats">
+      <div class="card">
+        <h3>Active Vehicles</h3>
+        <p> - </p>
+      </div>
+      <div class="card">
+        <h3>Total Trips</h3>
+        <p> - </p>
+      </div>
+      <div class="card">
+        <h3>Total Distance</h3>
+        <p class="number"> - </p>
+      </div>
+      <div class="card">
+        <h3>Backend Status</h3>
+        <p class="number">
+          <span *ngIf="!hasError; else backendDown">Online</span>
+          <ng-template #backendDown>Not Connected</ng-template>
+        </p>
+      </div>
+    </section>
+
+    <!-- Content: Map + Listen -->
+    <section class="content">
+      <!-- Map -->
+      <div class="map">
+        <h2>Live Vehicle Map</h2>
+        <div class="map-placeholder">
+          <div id="map" class="leaflet-map"></div>
+        </div>
+      </div>
+
+      <!-- Listen / Übersicht -->
+      <div class="charts">
+        <h2>Your Vehicles</h2>
+        <p *ngIf="vehicles.length === 0">No vehicles found.</p>
+        <ul *ngIf="vehicles.length > 0" class="list">
+          <li *ngFor="let v of vehicles">
+            <strong>{{ v.licensePlate }}</strong>
+            – {{ v.brand }} {{ v.model }}
+            • {{ v.mileage }} km
+          </li>
+        </ul>
+
+        <h2 style="margin-top: 2rem;">Recent Trips</h2>
+        <p *ngIf="trips.length === 0">No trips recorded.</p>
+        <ul *ngIf="trips.length > 0" class="list">
+          <li *ngFor="let t of trips | slice:0:5">
+            {{ t.startLocation }} → {{ t.endLocation }}
+            • {{ t.distanceKm }} km
+            • {{ t.startTime | date:'short' }}
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Analytics Button -->
+<button (click)="openAnalytics()">Analytics öffnen</button>
+
+
+<!-- POPUP (direkt in der Component) -->
+<div class="popup-overlay" *ngIf="showAnalyticsPopup" (click)="closeAnalyticsPopup()"></div>
+
+<div class="popup" *ngIf="showAnalyticsPopup">
+  <h2>Nur für angemeldete Nutzer</h2>
+
+  <p>Analytics stehen nur registrierten Nutzern zur Verfügung.</p>
+
+<!----  <button class="login-btn" (click)=router.navigate(['/auth'])">
+    Jetzt anmelden
+  </button> --->
+
+  <button class="close-btn" (click)="closeAnalyticsPopup()">
+    Schließen
+  </button>
+</div>

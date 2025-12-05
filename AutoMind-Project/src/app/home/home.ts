@@ -127,7 +127,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   navigateAsGuest(): void {
     console.log('Navigating as guest user');
     this.closeModal();
-    this.router.navigate(['/dashboard'], { 
+    this.router.navigate(['/guest-dashboard'], { 
       queryParams: { mode: 'guest' } 
     });
   }
