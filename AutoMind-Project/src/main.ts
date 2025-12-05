@@ -29,3 +29,6 @@ keycloak
     return bootstrapApplication(App, appConfig);
   })
   .catch((err) => console.error('Keycloak init error', err));*/
+
+ bootstrapApplication(App, appConfig)
+  .catch((err) => console.error(err)); 
