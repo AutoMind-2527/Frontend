@@ -3,9 +3,8 @@ import { appConfig } from './app/app.config';
 import { App } from './app/app';
 import Keycloak from 'keycloak-js';
 
-/*
 const keycloak = new Keycloak({
-  url: 'http://localhost:8080',
+  url: 'http://localhost:8090',
   realm: 'automind-realm',
   clientId: 'automind-frontend', // Client in Keycloak fürs Frontend
 });
@@ -28,7 +27,7 @@ keycloak
 
     return bootstrapApplication(App, appConfig);
   })
-  .catch((err) => console.error('Keycloak init error', err));*/
+  .catch((err) => console.error('Keycloak init error', err));
 
- bootstrapApplication(App, appConfig)
-  .catch((err) => console.error(err)); 
+// bootstrapApplication(App, appConfig)
+//   .catch((err) => console.error(err)); 
