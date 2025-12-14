@@ -5,7 +5,7 @@ on:
       - main
       - develop
   pull_request:
-    branches:
+    branches: 
       - main
       - develop
 
@@ -13,9 +13,13 @@ jobs:
   build-and-test:
     name: Build & Test (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
-    strategy:
+    strategy: 
       matrix:
-        node-version: [18.x, 20.x]
+        node-version: [18. x, 20.x]
+
+    defaults:
+      run:
+        working-directory: ./AutoMind-Project
 
     steps:
       - name: Checkout repository
@@ -26,20 +30,17 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
+          cache-dependency-path: './AutoMind-Project/package-lock.json'
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
-      - name:  Lint
+      - name:  Lint (if available)
         run: npm run lint --if-present
         continue-on-error: true
 
-      - name: Type check
-        run: npm run typecheck --if-present
-        continue-on-error: true
-
-      - name: Run unit tests
-        run: npm test --if-present
+      - name: Run tests
+        run: npm run test -- --watch=false --browsers=ChromeHeadless
         continue-on-error: true
 
       - name: Build
@@ -50,6 +51,4 @@ jobs:
         if: success()
         with:
           name:  build-artifact-node-${{ matrix.node-version }}
-          path: |
-            build
-            dist
+          path: ./AutoMind-Project/dist
