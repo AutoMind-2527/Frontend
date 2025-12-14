@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy: 
       matrix:
-        node-version: [18. x, 20.x]
+        node-version: [18.x, 20.x]
 
     defaults:
       run:
@@ -35,7 +35,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name:  Lint (if available)
+      - name: Lint (if available)
         run: npm run lint --if-present
         continue-on-error: true
 
@@ -50,5 +50,5 @@ jobs:
         uses: actions/upload-artifact@v4
         if: success()
         with:
-          name:  build-artifact-node-${{ matrix.node-version }}
+          name: build-artifact-node-${{ matrix.node-version }}
           path: ./AutoMind-Project/dist
