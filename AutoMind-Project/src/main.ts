@@ -9,9 +9,12 @@ const keycloak = new Keycloak({
   clientId: 'automind-frontend', // Client in Keycloak fürs Frontend
 });
 
+// global verfügbar machen für UI-Buttons
+(window as any).keycloak = keycloak;
+
 keycloak
   .init({
-    onLoad: 'login-required',   // User MUSS eingeloggt sein
+    onLoad: 'check-sso',        // Seite darf ohne Zwangs-Login laden
     pkceMethod: 'S256'
     
   })

@@ -133,7 +133,13 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   }
 
   navigateToAuth(): void {
-  this.closeModal();
-  this.router.navigate(['/auth']);
-}
+    this.closeModal();
+    const kc = (window as any).keycloak;
+    if (kc) {
+      kc.login({ redirectUri: `${window.location.origin}/dashboard` });
+    } else {
+      // Fallback: gehe zur alten Auth-Seite
+      this.router.navigate(['/auth']);
+    }
+  }
 }

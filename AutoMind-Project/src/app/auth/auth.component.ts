@@ -53,69 +53,23 @@ export class AuthComponent implements OnInit {
   }
 
   onLogin(): void {
-    if (!this.loginData.email || !this.loginData.password) {
-      this.authError = 'Please fill in all fields';
-      return;
-    }
-
-    if (!this.isValidEmail(this.loginData.email)) {
-      this.authError = 'Please enter a valid email address';
-      return;
-    }
-
-    this.isLoading = true;
     this.authError = '';
-
-    // Simulate API call
-    setTimeout(() => {
-      this.isLoading = false;
-      
-      // For demo purposes - in real app, validate against backend
-      if (this.loginData.email.includes('@') && this.loginData.password.length >= 6) {
-        console.log('Login successful');
-        this.router.navigate(['/dashboard'], { 
-          queryParams: { mode: 'authenticated' } 
-        });
-      } else {
-        this.authError = 'Invalid email or password';
-      }
-    }, 1500);
+    const kc = (window as any).keycloak;
+    if (!kc) {
+      this.authError = 'Keycloak not available';
+      return;
+    }
+    kc.login({ redirectUri: `${window.location.origin}/dashboard` });
   }
 
   onSignup(): void {
-    if (!this.signupData.name || !this.signupData.email || !this.signupData.password) {
-      this.authError = 'Please fill in all required fields';
-      return;
-    }
-
-    if (!this.isValidEmail(this.signupData.email)) {
-      this.authError = 'Please enter a valid email address';
-      return;
-    }
-
-    if (this.signupData.password !== this.signupData.confirmPassword) {
-      this.authError = 'Passwords do not match';
-      return;
-    }
-
-    if (this.signupData.password.length < 6) {
-      this.authError = 'Password must be at least 6 characters long';
-      return;
-    }
-
-    this.isLoading = true;
     this.authError = '';
-
-    // Simulate API call
-    setTimeout(() => {
-      this.isLoading = false;
-      
-      // For demo purposes - always succeed
-      console.log('Signup successful');
-      this.router.navigate(['/dashboard'], { 
-        queryParams: { mode: 'authenticated' } 
-      });
-    }, 1500);
+    const kc = (window as any).keycloak;
+    if (!kc) {
+      this.authError = 'Keycloak not available';
+      return;
+    }
+    kc.register({ redirectUri: `${window.location.origin}/dashboard` });
   }
 
   private isValidEmail(email: string): boolean {
