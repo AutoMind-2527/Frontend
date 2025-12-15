@@ -47,7 +47,17 @@ export class DashboardGuest implements OnInit, AfterViewInit, OnDestroy {
   // 1. Beim Laden -> Daten holen
   // -----------------------------
   ngOnInit(): void {
-    this.loadDashboardData();
+    // Guest-Modus: keine Backend-Aufrufe, nur Hinweis anzeigen
+    this.setGuestMode();
+  }
+
+  private setGuestMode(): void {
+    this.isLoading = false;
+    this.hasError = true; // zeigt den bestehenden Banner "Im Guest Modus..."
+    this.vehicles = [];
+    this.trips = [];
+    this.currentUser = null;
+    this.totalDistanceKm = 0;
   }
 
   private loadDashboardData(): void {
