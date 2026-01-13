@@ -5,6 +5,7 @@ import { LocationService } from '../services/location.service';
 import { NgIf, NgForOf, DecimalPipe, DatePipe, SlicePipe } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { ApiService } from '../services/api.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -31,6 +32,7 @@ export class Dashboard implements OnInit, AfterViewInit, OnDestroy {
   vehicles: any[] = [];
   trips: any[] = [];
   currentUser: any | null = null;
+  private authSub?: Subscription;
 
   // --- Stats ---
   totalDistanceKm = 0;
@@ -40,7 +42,8 @@ export class Dashboard implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private locationService: LocationService,
     private router: Router,
-    private api: ApiService
+    private api: ApiService,
+    private auth: AuthService
   ) {}
 
   // -----------------------------
@@ -48,6 +51,14 @@ export class Dashboard implements OnInit, AfterViewInit, OnDestroy {
   // -----------------------------
   ngOnInit(): void {
     this.loadDashboardData();
+    this.authSub = this.auth.username$.subscribe(name => {
+      if (!name) { return; }
+      if (!this.currentUser) {
+        this.currentUser = { username: name, role: 'User' };
+      } else {
+        this.currentUser.username = name;
+      }
+    });
   }
 
   private loadDashboardData(): void {
@@ -182,6 +193,9 @@ export class Dashboard implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.locationSub) {
       this.locationSub.unsubscribe();
+    }
+    if (this.authSub) {
+      this.authSub.unsubscribe();
     }
   }
 }
