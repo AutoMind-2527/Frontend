@@ -11,8 +11,20 @@
     <!-- Account -->
     <div class="settings-card">
       <h2>Account</h2>
-      <span>Aktueller Benutzer: <strong>User / Guest</strong></span>
+      <span>Aktueller Benutzer: <strong>{{ currentUsername || 'Guest' }}</strong></span>
       <button class="logout-btn" (click)="logout()">Logout</button>
+
+      <!-- Logout confirmation modal -->
+      <div class="modal-backdrop" *ngIf="showLogoutConfirm">
+        <div class="modal-card">
+          <h3>Abmelden</h3>
+          <p>Bist du sicher, dass du dich abmelden möchtest?</p>
+          <div class="modal-actions">
+            <button class="btn-secondary" (click)="cancelLogout()">Abbrechen</button>
+            <button class="btn-danger" (click)="confirmLogout()">Ja, sicher</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Datenschutz -->

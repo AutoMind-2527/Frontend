@@ -58,11 +58,12 @@
 }
 
 .settings-card {
-  background: #151a2e;
+  /* match the global page background color */
+  background: var(--bg-900, #0d1225) !important;
   border-radius: 16px;
   padding: 30px;
   width: 320px;
-  color: white;
+  color: #fff !important;
   box-shadow: 0 0 15px rgba(0,0,0,0.3);
 }
 
@@ -138,3 +139,33 @@ input:checked + .slider:before {
 .logout-btn:hover {
   background: #5a54db;
 }
+
+/* Modal styles for logout confirmation */
+.modal-backdrop {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.5);
+  z-index: 1000;
+}
+
+.modal-card {
+  background: var(--bg-900, #0d1225);
+  color: #fff;
+  padding: 20px 24px;
+  border-radius: 12px;
+  width: 360px;
+  box-shadow: 0 10px 40px rgba(2,6,23,0.6);
+  text-align: center;
+}
+
+.modal-card h3 { margin-bottom: 8px; color: var(--primary-600); }
+.modal-card p { margin-bottom: 16px; color: var(--text); }
+.modal-actions { display:flex; gap:12px; justify-content:center; }
+.btn-secondary { background:#333; color:#fff; padding:8px 14px; border-radius:8px; }
+.btn-danger { background:var(--primary-600); color:#fff; padding:8px 14px; border-radius:8px; }
