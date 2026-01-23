@@ -7,7 +7,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 export class ApiService {
 
   // ⚠️ Falls dein Backend auf einem anderen Port läuft -> hier anpassen
-  private baseUrl = 'http://localhost:5191';
+  private baseUrl = 'http://localhost:5000';
 
   constructor(private http: HttpClient) {}
 

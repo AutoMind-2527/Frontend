@@ -84,6 +84,12 @@ export class LiveMap implements AfterViewInit, OnDestroy {
     setTimeout(() => {
       this.map.invalidateSize();
     }, 100);
+    
+    // Marker-Position aktualisieren (wichtig — sonst bleibt Marker an der Fallback-Position)
+    if (this.marker) {
+      this.marker.setLatLng([lat, lng]);
+      try { this.marker.setPopupContent('Deine aktuelle Position'); } catch (e) {}
+    }
   }
 
   public forceLocationUpdate(): void {
