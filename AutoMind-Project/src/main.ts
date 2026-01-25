@@ -28,6 +28,16 @@ keycloak
       sessionStorage.setItem('token', keycloak.token);
     }
 
+    // Keep sessionStorage token up-to-date on auth events
+    keycloak.onAuthSuccess = () => { if (keycloak.token) sessionStorage.setItem('token', keycloak.token); };
+    keycloak.onAuthRefreshSuccess = () => { if (keycloak.token) sessionStorage.setItem('token', keycloak.token); };
+    keycloak.onAuthLogout = () => { sessionStorage.removeItem('token'); };
+    keycloak.onTokenExpired = () => {
+      keycloak.updateToken(30)
+        .then(() => { if (keycloak.token) sessionStorage.setItem('token', keycloak.token); })
+        .catch(() => { console.warn('Token refresh failed'); });
+    };
+
     return bootstrapApplication(App, appConfig);
   })
   .catch((err) => console.error('Keycloak init error', err));
