@@ -27,7 +27,7 @@ export class SettingsComponent {
   ) {}
 
   ngOnInit() {
-   // this.locationAccess = this.locationService.getTrackingStatus();
+   this.locationAccess = this.locationService.isTrackingEnabled();
    this.authSub = this.auth.username$.subscribe(name => {
      this.currentUsername = name;
    });
@@ -46,9 +46,9 @@ export class SettingsComponent {
     this.locationAccess = !this.locationAccess;
 
     if (this.locationAccess) {
-      //this.locationService.enableTracking();
+      this.locationService.enableTracking();
     } else {
-    // this.locationService.disableTracking();
+      this.locationService.disableTracking();
     }
   }
 

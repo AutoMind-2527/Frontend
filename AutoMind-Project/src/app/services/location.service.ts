@@ -8,9 +8,16 @@ import { BehaviorSubject } from 'rxjs';
 export class LocationService {
   public position$ = new BehaviorSubject<GeolocationPosition | null>(null);
   private watchId: number | null = null;
+  private trackingEnabled: boolean = true;
 
   constructor() {
-    this.startWatching();
+    // read persisted preference (default = true)
+    const stored = localStorage.getItem('trackingEnabled');
+    this.trackingEnabled = stored === null ? true : stored === 'true';
+
+    if (this.trackingEnabled) {
+      this.startWatching();
+    }
   }
 
   private startWatching(): void {
@@ -54,6 +61,32 @@ export class LocationService {
         maximumAge: 0
       }
     );
+  }
+
+  /** Returns whether tracking is currently enabled (based on stored preference) */
+  public isTrackingEnabled(): boolean {
+    return this.trackingEnabled;
+  }
+
+  /** Enable tracking: persist preference and (re)start the geolocation watcher */
+  public enableTracking(): void {
+    if (this.trackingEnabled) { return; }
+    this.trackingEnabled = true;
+    localStorage.setItem('trackingEnabled', 'true');
+    this.startWatching();
+  }
+
+  /** Disable tracking: persist preference and stop the geolocation watcher */
+  public disableTracking(): void {
+    if (!this.trackingEnabled) { return; }
+    this.trackingEnabled = false;
+    localStorage.setItem('trackingEnabled', 'false');
+    if (this.watchId !== null) {
+      navigator.geolocation.clearWatch(this.watchId);
+      this.watchId = null;
+    }
+    // Clear last known position for privacy
+    this.position$.next(null);
   }
 
   private startWatchingInternal(): void {
