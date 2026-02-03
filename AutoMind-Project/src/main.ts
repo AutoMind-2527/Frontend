@@ -4,8 +4,9 @@ import { App } from './app/app';
 import Keycloak from 'keycloak-js';
 
 const keycloak = new Keycloak({
-  // Keycloak ist per Docker-Compose auf Host-Port 8080 erreichbar
-  url: 'http://localhost:8080',
+  // Nutze die Keycloak-Instanz, die auch vom Backend erwartet wird
+  // (Backend Authority: https://if220129.cloud.htl-leonding.ac.at/keycloak/...)
+  url: 'https://if220129.cloud.htl-leonding.ac.at/keycloak',
   realm: 'automind-realm',
   clientId: 'automind-frontend', // Client in Keycloak fürs Frontend
 });
@@ -15,9 +16,9 @@ const keycloak = new Keycloak({
 
 keycloak
   .init({
-    onLoad: 'check-sso',        // Seite darf ohne Zwangs-Login laden
+    // Standard: Seite darf ohne Zwangs-Login laden; Login erfolgt bei Bedarf per UI
+    onLoad: 'check-sso',
     pkceMethod: 'S256'
-    
   })
   .then((authenticated) => {
     if (!authenticated) {

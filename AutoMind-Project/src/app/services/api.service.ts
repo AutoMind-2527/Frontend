@@ -15,6 +15,10 @@ export class ApiService {
   private getHeaders() {
     const token = sessionStorage.getItem('token');
 
+    if (!token) {
+      return new HttpHeaders();
+    }
+
     return new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
