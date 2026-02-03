@@ -1,0 +1,8 @@
+{
+  "/api": {
+    "target": "https://if220129.cloud.htl-leonding.ac.at",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}

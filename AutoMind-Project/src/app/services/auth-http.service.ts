@@ -4,7 +4,8 @@ import { Injectable } from '@angular/core';
 @Injectable({ providedIn: 'root' })
 export class AuthHttpService {
 
-  private baseUrl = 'http://localhost:5000';
+  // use backend port 5191 (matches backend launchSettings)
+  private baseUrl = 'http://localhost:5191';
 
   constructor(private http: HttpClient) {}
 

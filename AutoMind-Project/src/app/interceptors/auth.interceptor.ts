@@ -1,6 +1,6 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { from } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, catchError } from 'rxjs/operators';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const kc = (window as any).keycloak;
@@ -13,7 +13,15 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   if (kc && typeof kc.updateToken === 'function') {
     // updateToken returns a Promise<boolean>
-    return from(kc.updateToken(5)).pipe(switchMap(() => forwardWithToken()));
+    // If updateToken fails (no refresh token available), fall back to forwarding
+    // the request with the existing token instead of letting the request error out.
+    return from(kc.updateToken(5)).pipe(
+      switchMap(() => forwardWithToken()),
+      catchError((err) => {
+        console.warn('Keycloak updateToken failed, proceeding with existing token', err);
+        return forwardWithToken();
+      })
+    );
   }
 
   return forwardWithToken();

@@ -4,7 +4,8 @@ import { App } from './app/app';
 import Keycloak from 'keycloak-js';
 
 const keycloak = new Keycloak({
-  url: 'http://localhost:8090',
+  // Keycloak ist per Docker-Compose auf Host-Port 8080 erreichbar
+  url: 'http://localhost:8080',
   realm: 'automind-realm',
   clientId: 'automind-frontend', // Client in Keycloak fürs Frontend
 });

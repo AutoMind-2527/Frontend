@@ -6,8 +6,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 })
 export class ApiService {
 
-  // ⚠️ Falls dein Backend auf einem anderen Port läuft -> hier anpassen
-  private baseUrl = 'http://localhost:5000';
+  // Verwende relativen Pfad so der DevServer-Proxy (proxy.conf.json) greifen kann
+  // Proxy leitet `/api` an https://if220129.cloud.htl-leonding.ac.at weiter.
+  private baseUrl = '/api';
 
   constructor(private http: HttpClient) {}
 
