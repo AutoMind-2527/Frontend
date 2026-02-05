@@ -6,7 +6,7 @@ import Keycloak from 'keycloak-js';
 const keycloak = new Keycloak({
   // Nutze die Keycloak-Instanz, die auch vom Backend erwartet wird
   // (Backend Authority: https://if220129.cloud.htl-leonding.ac.at/keycloak/...)
-  url: 'https://if220129.cloud.htl-leonding.ac.at/keycloak',
+  url: 'https://if220129.cloud.htl-leonding.ac.at/swagger/index.html',
   realm: 'automind-realm',
   clientId: 'automind-frontend', // Client in Keycloak fürs Frontend
 });
