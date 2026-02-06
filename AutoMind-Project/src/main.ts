@@ -4,45 +4,50 @@ import { App } from './app/app';
 import Keycloak from 'keycloak-js';
 
 const keycloak = new Keycloak({
-  // Nutze die Keycloak-Instanz, die auch vom Backend erwartet wird
-  // (Backend Authority: https://if220129.cloud.htl-leonding.ac.at/keycloak/...)
-  url: 'https://if220129.cloud.htl-leonding.ac.at/swagger/index.html',
+  url: 'https://if220129.cloud.htl-leonding.ac.at/keycloak',
   realm: 'automind-realm',
-  clientId: 'automind-frontend', // Client in Keycloak fürs Frontend
+  clientId: 'automind-frontend',
 });
 
 // global verfügbar machen für UI-Buttons
 (window as any).keycloak = keycloak;
 
-keycloak
-  .init({
-    // Standard: Seite darf ohne Zwangs-Login laden; Login erfolgt bei Bedarf per UI
-    onLoad: 'check-sso',
-    pkceMethod: 'S256'
-  })
-  .then((authenticated) => {
-    if (!authenticated) {
-      console.warn('Not authenticated');
-    }
+// Development mode: Skip Keycloak, use mock token
+const DEV_MODE = true;
 
-    // Token fürs Backend speichern
-    if (keycloak.token) {
-      sessionStorage.setItem('token', keycloak.token);
-    }
+if (DEV_MODE) {
+  // Use mock token for development
+  const mockToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkRldiBVc2VyIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+  sessionStorage.setItem('token', mockToken);
+  bootstrapApplication(App, appConfig).catch((err) => console.error(err));
+} else {
+  keycloak
+    .init({
+      onLoad: 'login-required',
+      pkceMethod: 'S256',
+      checkLoginIframe: false
+    })
+    .then((authenticated) => {
+      if (!authenticated) {
+        console.warn('Not authenticated');
+      }
 
-    // Keep sessionStorage token up-to-date on auth events
-    keycloak.onAuthSuccess = () => { if (keycloak.token) sessionStorage.setItem('token', keycloak.token); };
-    keycloak.onAuthRefreshSuccess = () => { if (keycloak.token) sessionStorage.setItem('token', keycloak.token); };
-    keycloak.onAuthLogout = () => { sessionStorage.removeItem('token'); };
-    keycloak.onTokenExpired = () => {
-      keycloak.updateToken(30)
-        .then(() => { if (keycloak.token) sessionStorage.setItem('token', keycloak.token); })
-        .catch(() => { console.warn('Token refresh failed'); });
-    };
+      // Token fürs Backend speichern
+      if (keycloak.token) {
+        sessionStorage.setItem('token', keycloak.token);
+      }
 
-    return bootstrapApplication(App, appConfig);
-  })
-  .catch((err) => console.error('Keycloak init error', err));
+      // Keep sessionStorage token up-to-date on auth events
+      keycloak.onAuthSuccess = () => { if (keycloak.token) sessionStorage.setItem('token', keycloak.token); };
+      keycloak.onAuthRefreshSuccess = () => { if (keycloak.token) sessionStorage.setItem('token', keycloak.token); };
+      keycloak.onAuthLogout = () => { sessionStorage.removeItem('token'); };
+      keycloak.onTokenExpired = () => {
+        keycloak.updateToken(30)
+          .then(() => { if (keycloak.token) sessionStorage.setItem('token', keycloak.token); })
+          .catch(() => { console.warn('Token refresh failed'); });
+      };
 
-// bootstrapApplication(App, appConfig)
-//   .catch((err) => console.error(err)); 
+      return bootstrapApplication(App, appConfig);
+    })
+    .catch((err) => console.error('Keycloak init error', err));
+}

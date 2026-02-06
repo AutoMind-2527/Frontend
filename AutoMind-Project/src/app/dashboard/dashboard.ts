@@ -3,7 +3,7 @@ import { RouterLink, Router } from '@angular/router';
 import * as L from 'leaflet';
 import { LocationService } from '../services/location.service';
 import { NgIf, NgForOf, DecimalPipe, DatePipe, SlicePipe } from '@angular/common';
-import { Subscription } from 'rxjs';
+import { Subscription, interval } from 'rxjs';
 import { ApiService } from '../services/api.service';
 import { AuthService } from '../services/auth.service';
 
@@ -26,7 +26,9 @@ export class Dashboard implements OnInit, AfterViewInit, OnDestroy {
   // --- Map ---
   private map!: L.Map;
   private marker!: L.Marker;
+  private piMarker!: L.Marker;
   private locationSub!: Subscription;
+  private piGpsSubscription!: Subscription;
 
   // --- Daten aus Backend ---
   vehicles: any[] = [];
@@ -115,6 +117,25 @@ export class Dashboard implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     this.initMap();
 
+    // Subscribe to login status to load Pi GPS
+    this.authSub = this.auth.isLoggedIn$.subscribe(status => {
+      if (status) {
+        // Start polling for Pi GPS if logged in
+        this.piGpsSubscription = interval(10000).subscribe(() => {
+          this.loadPiGpsData();
+        });
+        this.loadPiGpsData(); // Load immediately
+      } else {
+        // Stop polling if logged out
+        if (this.piGpsSubscription) {
+          this.piGpsSubscription.unsubscribe();
+        }
+        if (this.piMarker && this.map) {
+          this.map.removeLayer(this.piMarker);
+        }
+      }
+    });
+
     // Subscription: reagiere auf Positionsupdates vom LocationService
     this.locationSub = this.locationService.position$.subscribe(pos => {
       if (!pos) {
@@ -186,6 +207,44 @@ export class Dashboard implements OnInit, AfterViewInit, OnDestroy {
     }, 200);
   }
 
+  private loadPiGpsData(): void {
+    this.api.getLatestGpsData().subscribe({
+      next: (data: any[]) => {
+        if (!data || data.length === 0) return;
+
+        const latest = data[0];
+        const coords: L.LatLngExpression = [latest.latitude, latest.longitude];
+        const speed = latest.speedKmh ?? 0;
+
+        if (!this.piMarker) {
+          const piIcon = L.divIcon({
+            className: 'custom-pi-marker',
+            html: `
+              <svg width="24" height="32" viewBox="0 0 32 44">
+                <path d="M16 0C7.2 0 0 7.2 0 16c0 11 16 28 16 28s16-17 16-28C32 7.2 24.8 0 16 0z"
+                  fill="#ef4444"
+                  stroke="#fff"
+                  stroke-width="2"/>
+                <circle cx="16" cy="16" r="6" fill="#fff"/>
+              </svg>`,
+            iconSize: [24, 32],
+            iconAnchor: [12, 32]
+          });
+
+          this.piMarker = L.marker(coords, { icon: piIcon, title: 'Pi GPS' })
+            .bindPopup(`<b>Pi GPS</b><br/>Speed: ${speed.toFixed(2)} km/h`)
+            .addTo(this.map);
+        } else {
+          this.piMarker.setLatLng(coords);
+          this.piMarker.setPopupContent(`<b>Pi GPS</b><br/>Speed: ${speed.toFixed(2)} km/h`);
+        }
+      },
+      error: (err) => {
+        console.error('Error loading Pi GPS data', err);
+      }
+    });
+  }
+
   goHome() {
     this.router.navigate(['/home']);
   }
@@ -196,6 +255,9 @@ export class Dashboard implements OnInit, AfterViewInit, OnDestroy {
     }
     if (this.authSub) {
       this.authSub.unsubscribe();
+    }
+    if (this.piGpsSubscription) {
+      this.piGpsSubscription.unsubscribe();
     }
   }
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit, AfterViewInit, HostListener, ElementRef, ViewChild, OnDestroy } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -17,7 +18,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('heroSection', { static: false }) heroSection!: ElementRef<HTMLElement>;
   private heroObserver: IntersectionObserver | null = null;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   ngOnInit() {
     this.scrollToTop();
@@ -127,6 +128,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   navigateAsGuest(): void {
     console.log('Navigating as guest user');
     this.closeModal();
+    this.authService.continueAsGuest(); // Mark as guest
     this.router.navigate(['/guest-dashboard'], { 
       queryParams: { mode: 'guest' } 
     });
@@ -134,12 +136,15 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
 
   navigateToAuth(): void {
     this.closeModal();
-    const kc = (window as any).keycloak;
-    if (kc) {
-      kc.login({ redirectUri: `${window.location.origin}/dashboard` });
-    } else {
-      // Fallback: gehe zur alten Auth-Seite
-      this.router.navigate(['/auth']);
-    }
+    // Wait for login to complete before navigating
+    this.authService.login().then(success => {
+      if (success) {
+        this.router.navigate(['/dashboard'], { 
+          queryParams: { mode: 'authenticated' } 
+        });
+      } else {
+        console.error('Login failed');
+      }
+    });
   }
 }

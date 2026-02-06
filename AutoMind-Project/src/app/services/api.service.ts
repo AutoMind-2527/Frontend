@@ -6,9 +6,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 })
 export class ApiService {
 
-  // Verwende relativen Pfad so der DevServer-Proxy (proxy.conf.json) greifen kann
-  // Proxy leitet `/api` an https://if220129.cloud.htl-leonding.ac.at weiter.
-  private baseUrl = '/api';
+  // Direct cloud backend URL
+  private baseUrl = 'https://if220129.cloud.htl-leonding.ac.at/api';
 
   constructor(private http: HttpClient) {}
 
@@ -26,33 +25,40 @@ export class ApiService {
 
   // ---- Auth / aktueller User ----
   getCurrentUser() {
-    return this.http.get(`${this.baseUrl}/api/Auth/me`, {
+    return this.http.get(`${this.baseUrl}/Auth/me`, {
       headers: this.getHeaders()
     });
   }
 
   // ---- Trips ----
   getTrips() {
-    return this.http.get(`${this.baseUrl}/api/Trips`, {
+    return this.http.get(`${this.baseUrl}/Trips`, {
       headers: this.getHeaders()
     });
   }
 
   createTrip(body: any) {
-    return this.http.post(`${this.baseUrl}/api/Trips`, body, {
+    return this.http.post(`${this.baseUrl}/Trips`, body, {
       headers: this.getHeaders()
     });
   }
 
   // ---- Vehicles ----
   getVehicles() {
-    return this.http.get(`${this.baseUrl}/api/Vehicles`, {
+    return this.http.get(`${this.baseUrl}/Vehicles`, {
       headers: this.getHeaders()
     });
   }
 
   createVehicle(body: any) {
-    return this.http.post(`${this.baseUrl}/api/Vehicles`, body, {
+    return this.http.post(`${this.baseUrl}/Vehicles`, body, {
+      headers: this.getHeaders()
+    });
+  }
+
+  // ---- GPS Data ----
+  getLatestGpsData() {
+    return this.http.get<any[]>(`${this.baseUrl}/Gps`, {
       headers: this.getHeaders()
     });
   }

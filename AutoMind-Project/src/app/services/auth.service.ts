@@ -7,6 +7,9 @@ declare const window: any;
 export class AuthService {
   private usernameSubject = new BehaviorSubject<string | null>(null);
   public username$ = this.usernameSubject.asObservable();
+  
+  private isLoggedInSubject = new BehaviorSubject<boolean>(this.checkLoginStatus());
+  public isLoggedIn$ = this.isLoggedInSubject.asObservable();
 
   constructor() {
     const kc = (window as any).keycloak;
@@ -23,6 +26,11 @@ export class AuthService {
         // some keycloak builds may not expose these handlers; ignore safely
       }
     }
+  }
+
+  private checkLoginStatus(): boolean {
+    const loginStatus = sessionStorage.getItem('isLoggedIn');
+    return loginStatus === 'true';
   }
 
   private updateFromKeycloak(kc: any) {
@@ -48,5 +56,57 @@ export class AuthService {
     } catch (e) {
       this.usernameSubject.next(null);
     }
+  }
+
+  login(): Promise<boolean> {
+    // Get real token from Keycloak using password grant
+    const tokenUrl = 'https://if220129.cloud.htl-leonding.ac.at/keycloak/realms/automind-realm/protocol/openid-connect/token';
+    const body = new URLSearchParams();
+    body.set('grant_type', 'password');
+    body.set('client_id', 'automind-backend');
+    body.set('username', 'trackertest');
+    body.set('password', 'admin');
+
+    return fetch(tokenUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: body.toString()
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.access_token) {
+        sessionStorage.setItem('token', data.access_token);
+        sessionStorage.setItem('isLoggedIn', 'true');
+        this.usernameSubject.next('trackertest');
+        this.isLoggedInSubject.next(true);
+        console.log('✅ Successfully logged in with real Keycloak token');
+        return true;
+      } else {
+        console.error('Failed to get token:', data);
+        return false;
+      }
+    })
+    .catch(error => {
+      console.error('Login error:', error);
+      return false;
+    });
+  }
+
+  logout(): void {
+    sessionStorage.removeItem('isLoggedIn');
+    this.usernameSubject.next(null);
+    this.isLoggedInSubject.next(false);
+  }
+
+  continueAsGuest(): void {
+    sessionStorage.setItem('isLoggedIn', 'false');
+    this.usernameSubject.next(null);
+    this.isLoggedInSubject.next(false);
+  }
+
+  isLoggedIn(): boolean {
+    return this.isLoggedInSubject.value;
   }
 }
