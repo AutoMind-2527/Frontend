@@ -71,45 +71,40 @@ export class AuthService {
   }
 
   login(): Promise<boolean> {
-    // Get real token from Keycloak using password grant
-    const tokenUrl = 'https://if220129.cloud.htl-leonding.ac.at/keycloak/realms/automind-realm/protocol/openid-connect/token';
-    const body = new URLSearchParams();
-    body.set('grant_type', 'password');
-    body.set('client_id', 'automind-backend');
-    body.set('username', 'trackertest');
-    body.set('password', 'admin');
+    const kc = (window as any).keycloak;
+    if (!kc) {
+      console.error('Keycloak not initialized');
+      return Promise.resolve(false);
+    }
 
-    return fetch(tokenUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      body: body.toString()
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.access_token) {
-        sessionStorage.setItem('token', data.access_token);
-        sessionStorage.setItem('isLoggedIn', 'true');
-        this.usernameSubject.next('trackertest');
-        this.isLoggedInSubject.next(true);
-        console.log('✅ Successfully logged in with real Keycloak token');
-        return true;
-      } else {
-        console.error('Failed to get token:', data);
-        return false;
-      }
-    })
-    .catch(error => {
-      console.error('Login error:', error);
-      return false;
-    });
+    // Redirect to Keycloak login page
+    kc.login({ redirectUri: `${window.location.origin}/dashboard` });
+    
+    // Return promise (though we're redirecting away)
+    return Promise.resolve(true);
+  }
+
+  signup(): void {
+    const kc = (window as any).keycloak;
+    if (!kc) {
+      console.error('Keycloak not initialized');
+      return;
+    }
+
+    // Redirect to Keycloak registration page
+    kc.register({ redirectUri: `${window.location.origin}/dashboard` });
   }
 
   logout(): void {
     sessionStorage.removeItem('isLoggedIn');
+    sessionStorage.removeItem('token');
     this.usernameSubject.next(null);
     this.isLoggedInSubject.next(false);
+
+    const kc = (window as any).keycloak;
+    if (kc && typeof kc.logout === 'function') {
+      kc.logout({ redirectUri: window.location.origin });
+    }
   }
 
   continueAsGuest(): void {

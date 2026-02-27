@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, OnDestroy, OnInit } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
 import * as L from 'leaflet';
 import { LocationService } from '../services/location.service';
@@ -6,6 +6,7 @@ import { NgIf, NgForOf, DecimalPipe, DatePipe, SlicePipe } from '@angular/common
 import { Subscription, interval } from 'rxjs';
 import { ApiService } from '../services/api.service';
 import { AuthService } from '../services/auth.service';
+import { AddTrackerComponent } from '../components/add-tracker/add-tracker.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,12 +17,14 @@ import { AuthService } from '../services/auth.service';
     NgForOf,
     DecimalPipe,
     DatePipe,
-    SlicePipe
+    SlicePipe,
+    AddTrackerComponent
   ],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css']
 })
 export class Dashboard implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild(AddTrackerComponent) addTrackerComponent?: AddTrackerComponent;
 
   // --- Map ---
   private map!: L.Map;
@@ -247,6 +250,22 @@ export class Dashboard implements OnInit, AfterViewInit, OnDestroy {
 
   goHome() {
     this.router.navigate(['/home']);
+  }
+
+  openAddTrackerModal(): void {
+    if (this.addTrackerComponent) {
+      this.addTrackerComponent.openModal();
+    }
+  }
+
+  onTrackerAdded(vehicle: any): void {
+    // Refresh vehicles list after tracker is added
+    this.loadDashboardData();
+  }
+
+  closeModal(): void {
+    // This method is called when the add-tracker modal is closed
+    // No action needed - modal will close on its own
   }
 
   ngOnDestroy(): void {

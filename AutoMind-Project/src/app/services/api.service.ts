@@ -56,6 +56,14 @@ export class ApiService {
     });
   }
 
+  claimTracker(trackerCode: string) {
+    return this.http.post(`${this.baseUrl}/Vehicles/claim`, {
+      trackerCode: trackerCode
+    }, {
+      headers: this.getHeaders()
+    });
+  }
+
   // ---- GPS Data ----
   getLatestGpsData() {
     return this.http.get<any[]>(`${this.baseUrl}/Gps`, {

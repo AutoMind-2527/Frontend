@@ -136,15 +136,13 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
 
   navigateToAuth(): void {
     this.closeModal();
-    // Wait for login to complete before navigating
-    this.authService.login().then(success => {
-      if (success) {
-        this.router.navigate(['/dashboard'], { 
-          queryParams: { mode: 'authenticated' } 
-        });
-      } else {
-        console.error('Login failed');
-      }
-    });
+    // Launch Keycloak login page (will redirect back to /dashboard on success)
+    this.authService.login();
+  }
+
+  navigateToSignup(): void {
+    this.closeModal();
+    // Launch Keycloak signup page (will redirect back to /dashboard on success)  
+    this.authService.signup();
   }
 }

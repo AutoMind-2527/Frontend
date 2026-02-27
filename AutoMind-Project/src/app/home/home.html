@@ -42,14 +42,21 @@
           <div class="option-icon">🚗</div>
           <div class="option-content">
             <h4>Continue as Guest</h4>
-            <p>Explore our webpage without saving any data</p>
+            <p>Explore with your device GPS only</p>
           </div>
         </button>
         <button class="user-option loggedin-option" (click)="navigateToAuth()">
-          <div class="option-icon">👤</div>
+          <div class="option-icon">🔓</div>
           <div class="option-content">
-            <h4>Sign In / Sign Up</h4>
-            <p>Access your full account with personal data</p>
+            <h4>Sign In</h4>
+            <p>Login with an existing account</p>
+          </div>
+        </button>
+        <button class="user-option loggedin-option" (click)="navigateToSignup()">
+          <div class="option-icon">✍️</div>
+          <div class="option-content">
+            <h4>Sign Up</h4>
+            <p>Create a new account & track vehicle</p>
           </div>
         </button>
       </div>

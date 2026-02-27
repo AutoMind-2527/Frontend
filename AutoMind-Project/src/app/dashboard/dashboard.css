@@ -273,3 +273,34 @@
   border-bottom: 1px solid #2a2f45;
   font-size: 0.9rem;
 }
+
+.btn-add-tracker {
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #6c63ff 0%, #5b54d6 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-add-tracker:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(108, 99, 255, 0.4);
+  background: linear-gradient(135deg, #7d74ff 0%, #6c63ff 100%);
+}
+
+.btn-add-tracker:active {
+  transform: translateY(0);
+}
+
+.btn-add-tracker:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
