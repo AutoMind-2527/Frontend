@@ -20,7 +20,12 @@ export class AuthService {
       // attach simple handlers if available
       try {
         kc.onAuthSuccess = () => this.updateFromKeycloak(kc);
-        kc.onAuthLogout = () => this.usernameSubject.next(null);
+        kc.onAuthLogout = () => {
+          sessionStorage.removeItem('token');
+          sessionStorage.setItem('isLoggedIn', 'false');
+          this.usernameSubject.next(null);
+          this.isLoggedInSubject.next(false);
+        };
         kc.onAuthRefreshSuccess = () => this.updateFromKeycloak(kc);
       } catch (e) {
         // some keycloak builds may not expose these handlers; ignore safely
@@ -39,6 +44,9 @@ export class AuthService {
       const username = parsed.preferred_username || parsed.username || parsed.name || null;
       if (username) {
         this.usernameSubject.next(username);
+        // mark as logged in
+        sessionStorage.setItem('isLoggedIn', 'true');
+        this.isLoggedInSubject.next(true);
         return;
       }
 
@@ -48,6 +56,10 @@ export class AuthService {
           .then((profile: any) => {
             const pName = profile?.username || (profile?.firstName ? `${profile.firstName} ${profile.lastName || ''}`.trim() : null);
             this.usernameSubject.next(pName || null);
+            if (pName) {
+              sessionStorage.setItem('isLoggedIn', 'true');
+              this.isLoggedInSubject.next(true);
+            }
           })
           .catch(() => this.usernameSubject.next(null));
       } else {

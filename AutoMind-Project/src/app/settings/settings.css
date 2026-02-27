@@ -13,6 +13,32 @@
 .top-bar {
   width: 100%;
   padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+}
+
+.back-btn {
+  background-color: #7b61ff;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-left: 12px;
+  transition: all 0.25s ease;
+}
+
+.back-btn:hover {
+  background-color: #6a4dd1;
+  box-shadow: 0 4px 12px rgba(123, 97, 255, 0.25);
 }
 
 .logo {

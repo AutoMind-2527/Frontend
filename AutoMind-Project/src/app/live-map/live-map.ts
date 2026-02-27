@@ -81,9 +81,7 @@ export class LiveMap implements AfterViewInit, OnDestroy, OnInit {
     });
 
     this.userMarker = L.marker([48.2733, 14.3024], { icon: userPinIcon })
-      .addTo(this.map)
-      .bindPopup('Browser-GPS')
-      .openPopup();
+      .addTo(this.map);
 
     // Pi-GPS Marker (rot) - only if logged in
     if (this.isLoggedIn) {

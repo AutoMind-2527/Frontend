@@ -1,5 +1,10 @@
 <div class="top-bar">
-  <h1 class="logo" (click)="goHome()">AutoMind</h1>
+  <div class="navbar-left">
+    <h1 class="logo" (click)="goHome()">AutoMind</h1>
+  </div>
+  <div class="navbar-right">
+    <button class="back-btn" (click)="goBack()" title="Back to Dashboard">← Back</button>
+  </div>
 </div>
 
 <div class="settings-container">

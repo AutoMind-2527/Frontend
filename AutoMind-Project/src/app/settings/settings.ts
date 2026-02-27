@@ -37,6 +37,10 @@ export class SettingsComponent {
     this.router.navigate(['/home']);
   }
 
+  goBack() {
+    this.router.navigate(['/dashboard']);
+  }
+
   toggleDarkMode() {
     this.darkMode = !this.darkMode;
     document.body.classList.toggle('dark-theme', this.darkMode);

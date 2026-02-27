@@ -13,7 +13,8 @@ const keycloak = new Keycloak({
 (window as any).keycloak = keycloak;
 
 // Development mode: Skip Keycloak, use mock token
-const DEV_MODE = true;
+// Set to false to require real Keycloak login
+const DEV_MODE = false;
 
 if (DEV_MODE) {
   // Use mock token for development
@@ -21,18 +22,26 @@ if (DEV_MODE) {
   sessionStorage.setItem('token', mockToken);
   bootstrapApplication(App, appConfig).catch((err) => console.error(err));
 } else {
+  // Start the app immediately so the homepage is shown without waiting for Keycloak.
+  bootstrapApplication(App, appConfig).catch((err) => console.error(err));
+
+  // Initialize Keycloak in the background. We use 'check-sso' so the user is not
+  // redirected away automatically; login only happens when calling `keycloak.login()`.
   keycloak
     .init({
-      onLoad: 'login-required',
+      // Do not pass `onLoad` here — that would trigger a silent SSO check which
+      // can cause an automatic redirect. We initialize the adapter so `kc.login()`
+      // can be called later from the UI, but we don't perform any login checks now.
       pkceMethod: 'S256',
-      checkLoginIframe: false
+      checkLoginIframe: false,
+      // Prevent fallback redirect when silent SSO isn't supported in the browser.
+      silentCheckSsoFallback: false
     })
     .then((authenticated) => {
       if (!authenticated) {
         console.warn('Not authenticated');
       }
 
-      // Token fürs Backend speichern
       if (keycloak.token) {
         sessionStorage.setItem('token', keycloak.token);
       }
@@ -46,8 +55,6 @@ if (DEV_MODE) {
           .then(() => { if (keycloak.token) sessionStorage.setItem('token', keycloak.token); })
           .catch(() => { console.warn('Token refresh failed'); });
       };
-
-      return bootstrapApplication(App, appConfig);
     })
     .catch((err) => console.error('Keycloak init error', err));
 }
