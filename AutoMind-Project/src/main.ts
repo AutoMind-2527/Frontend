@@ -16,8 +16,8 @@ keycloak
   .init({
     onLoad: 'check-sso',
     pkceMethod: 'S256',
-    checkLoginIframe: true,
-    silentCheckSsoRedirectUri: window.location.origin + '/silent-check-sso.html'
+    checkLoginIframe: false,
+    enableLogging: true
   })
   .then((authenticated) => {
     console.log('Keycloak initialized. Authenticated:', authenticated);
@@ -52,4 +52,6 @@ keycloak
   })
   .catch((err) => {
     console.error('Keycloak initialization failed', err);
+    // Still bootstrap the app even if Keycloak init fails
+    return bootstrapApplication(App, appConfig);
   });
