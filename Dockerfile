@@ -17,11 +17,11 @@ RUN npm run build -- --configuration=production
 # ===== Runtime-Stage (Nginx) =====
 FROM nginx:stable-alpine
 
+# Copy nginx config for SPA routing
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 # WICHTIG: Angular 20 outputs to dist/AutoMind-Project/browser
 COPY --from=build /app/dist/AutoMind-Project/browser /usr/share/nginx/html
-
-# Configure nginx to serve SPA correctly
-RUN echo "server { listen 80; location / { try_files \$uri \$uri/ /index.html; } }" > /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
