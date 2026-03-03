@@ -16,7 +16,8 @@ keycloak
   .init({
     onLoad: 'check-sso',
     pkceMethod: 'S256',
-    checkLoginIframe: false
+    checkLoginIframe: true,
+    silentCheckSsoRedirectUri: window.location.origin + '/silent-check-sso.html'
   })
   .then((authenticated) => {
     console.log('Keycloak initialized. Authenticated:', authenticated);
