@@ -142,3 +142,93 @@ body:not(.dark-theme) .settings-card {
     background: #e8e8e8;
     color: black;
 }
+
+/* -----------------------------
+   Responsive / Utility styles
+   (Step 1 of 4) - global rules
+   ----------------------------- */
+
+/* responsive spacing and breakpoints */
+:root {
+  --container-pad: 1rem;
+  --gap: 1rem;
+  --bp-sm: 640px; /* small */
+  --bp-md: 768px; /* tablet */
+  --bp-lg: 1024px; /* desktop */
+}
+
+/* fluid / clamped typography for better scaling */
+html {
+  font-size: clamp(14px, 1.2vw, 18px);
+}
+
+/* make the central container responsive */
+.container {
+  padding-left: var(--container-pad);
+  padding-right: var(--container-pad);
+}
+
+@media (min-width: 768px) {
+  :root {
+    --container-pad: 1.5rem;
+    --gap: 1.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --container-pad: 2rem;
+    --gap: 1.5rem;
+  }
+  .container {
+    padding-left: calc(var(--container-pad) + 0.5rem);
+    padding-right: calc(var(--container-pad) + 0.5rem);
+  }
+}
+
+/* simple responsive grid helpers (mobile-first) */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap);
+}
+.col {
+  flex: 1 1 100%;
+  min-width: 0;
+}
+.col-1 { flex: 1 1 8.3333%; }
+.col-2 { flex: 1 1 16.6667%; }
+.col-3 { flex: 1 1 25%; }
+.col-4 { flex: 1 1 33.3333%; }
+.col-6 { flex: 1 1 50%; }
+
+@media (min-width: 768px) {
+  .col-md-6 { flex: 1 1 calc(50% - var(--gap)); }
+  .col-md-4 { flex: 1 1 calc(33.3333% - var(--gap)); }
+  .col-md-3 { flex: 1 1 calc(25% - var(--gap)); }
+}
+
+@media (min-width: 1024px) {
+  .col-lg-6 { flex: 1 1 calc(50% - var(--gap)); }
+  .col-lg-4 { flex: 1 1 calc(33.3333% - var(--gap)); }
+  .col-lg-3 { flex: 1 1 calc(25% - var(--gap)); }
+}
+
+/* make images and videos fluid */
+img, video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* stackable header/nav helpers (to be used in step 2) */
+.nav-inline { display: flex; gap: 0.75rem; align-items: center; }
+.nav-stack { display: none; }
+
+@media (max-width: 767px) {
+  .nav-inline { display: none; }
+  .nav-stack { display: flex; flex-direction: column; gap: 0.5rem; }
+}
+
+/* small utility: center sections responsively */
+.centered { display: flex; align-items: center; justify-content: center; }
