@@ -5,10 +5,30 @@
       <div class="brand-name">AutoMind</div>
       <div class="brand-motto">Intelligent Vehicle Monitoring</div>
     </div>
-    <div class="floating-actions">
-      <button class="btn-primary" (click)="openUserModal()">Explore Dashboard</button>
-      <button class="btn-outline" routerLink="/learn-more">Learn More</button>
-    </div>
+    <nav class="site-nav">
+      <div class="nav-inline">
+        <a routerLink="/home">Home</a>
+        <a routerLink="/dashboard">Dashboard</a>
+        <a routerLink="/settings">Settings</a>
+        <a routerLink="/learn-more">Learn More</a>
+      </div>
+
+      <!-- hamburger for small screens -->
+      <button class="hamburger" (click)="toggleMobileNav()" aria-label="Toggle navigation">
+        <span class="hamburger-box"><span class="hamburger-inner"></span></span>
+      </button>
+
+      <!-- stacked mobile nav shown when hamburger open -->
+      <div class="nav-stack" *ngIf="mobileMenuOpen">
+        <a routerLink="/home" (click)="closeMobileNav()">Home</a>
+        <a routerLink="/dashboard" (click)="closeMobileNav()">Dashboard</a>
+        <a routerLink="/settings" (click)="closeMobileNav()">Settings</a>
+        <a routerLink="/learn-more" (click)="closeMobileNav()">Learn More</a>
+        <div class="mobile-actions">
+          <button class="btn-primary" (click)="openUserModal(); closeMobileNav()">Explore Dashboard</button>
+        </div>
+      </div>
+    </nav>
   </div>
 </header>
 

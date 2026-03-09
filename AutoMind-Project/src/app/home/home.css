@@ -54,6 +54,41 @@ p { color: rgba(230,238,248,0.92); }
   gap: 1rem;
 }
 
+/* Site nav (inline desktop, stacked mobile) */
+.site-nav { display: flex; align-items: center; gap: 0.75rem; position: relative; }
+.site-nav a { color: var(--text); text-decoration: none; padding: 0.35rem 0.5rem; border-radius: 6px; font-weight:600; }
+.site-nav a:hover { background: rgba(255,255,255,0.03); }
+
+/* Inline nav visible on larger screens */
+.nav-inline { display: flex; gap: 0.5rem; align-items: center; }
+.nav-stack { display: none; }
+
+/* Hamburger button */
+.hamburger { display: none; background: transparent; border: none; padding: 0.4rem; cursor: pointer; border-radius:6px; }
+.hamburger .hamburger-box { width: 22px; height: 16px; display: inline-block; position: relative; }
+.hamburger .hamburger-inner { position: absolute; top: 50%; left: 0; right: 0; height: 2px; background: var(--text); transform: translateY(-50%); transition: all 220ms ease; }
+.hamburger .hamburger-inner::before, .hamburger .hamburger-inner::after { content: ''; position: absolute; left: 0; right: 0; height: 2px; background: var(--text); transition: all 220ms ease; }
+.hamburger .hamburger-inner::before { top: -7px; }
+.hamburger .hamburger-inner::after { top: 7px; }
+
+/* Mobile nav overlay/stack */
+.nav-stack {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  left: 0;
+  background: linear-gradient(180deg, rgba(14,26,36,0.96), rgba(7,22,43,0.98));
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(2,6,23,0.6);
+  z-index: 1000;
+}
+.nav-stack a { padding: 0.85rem 1rem; border-radius: 8px; }
+.mobile-actions { padding-top: 0.5rem; }
+
 .site-header .brand {
   display: flex;
   flex-direction: column;
@@ -95,6 +130,10 @@ p { color: rgba(230,238,248,0.92); }
   .site-header { padding: 0 0.5rem; }
   .brand-name { font-size: 1rem; }
   .floating-actions button { min-width: 0; padding: 0.45rem 0.6rem; }
+  /* hide desktop inline nav/actions on small devices */
+  .nav-inline { display: none; }
+  .hamburger { display: inline-flex; }
+  .floating-actions { display: none; }
 }
 
 /* larger screens show a side accent */

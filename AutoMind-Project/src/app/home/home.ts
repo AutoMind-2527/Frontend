@@ -14,6 +14,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   showUserModal = false;
   headerSmall = false;
   headerVisible = false;
+  mobileMenuOpen = false;
 
   @ViewChild('heroSection', { static: false }) heroSection!: ElementRef<HTMLElement>;
   private heroObserver: IntersectionObserver | null = null;
@@ -118,6 +119,17 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   openUserModal(): void {
     this.showUserModal = true;
     document.body.style.overflow = 'hidden';
+  }
+
+  toggleMobileNav(): void {
+    this.mobileMenuOpen = !this.mobileMenuOpen;
+    // prevent background scroll when mobile nav is open
+    document.body.style.overflow = this.mobileMenuOpen ? 'hidden' : '';
+  }
+
+  closeMobileNav(): void {
+    this.mobileMenuOpen = false;
+    document.body.style.overflow = '';
   }
 
   closeModal(): void {
