@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-auth',
@@ -29,7 +30,10 @@ export class AuthComponent implements OnInit {
   isLoading = false;
   authError = '';
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) {}
 
   ngOnInit() {
     this.setBodyBackground();
@@ -52,24 +56,26 @@ export class AuthComponent implements OnInit {
     this.signupData = { name: '', email: '', password: '', confirmPassword: '' };
   }
 
-  onLogin(): void {
+  async onLogin(): Promise<void> {
     this.authError = '';
-    const kc = (window as any).keycloak;
-    if (!kc) {
-      this.authError = 'Keycloak not available';
-      return;
+    this.isLoading = true;
+
+    const started = await this.authService.login();
+    if (!started) {
+      this.authError = 'Could not start Keycloak login.';
+      this.isLoading = false;
     }
-    kc.login({ redirectUri: `${window.location.origin}/dashboard` });
   }
 
-  onSignup(): void {
+  async onSignup(): Promise<void> {
     this.authError = '';
-    const kc = (window as any).keycloak;
-    if (!kc) {
-      this.authError = 'Keycloak not available';
-      return;
+    this.isLoading = true;
+
+    const started = await this.authService.signup();
+    if (!started) {
+      this.authError = 'Could not start Keycloak sign up.';
+      this.isLoading = false;
     }
-    kc.register({ redirectUri: `${window.location.origin}/dashboard` });
   }
 
   private isValidEmail(email: string): boolean {

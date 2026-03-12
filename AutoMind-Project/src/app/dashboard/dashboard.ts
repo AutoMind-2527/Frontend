@@ -55,7 +55,16 @@ export class Dashboard implements OnInit, AfterViewInit, OnDestroy {
   // 1. Beim Laden -> Daten holen
   // -----------------------------
   ngOnInit(): void {
-    this.loadDashboardData();
+    // Wait for Keycloak to finish initializing (including code exchange on login callback)
+    // before firing API requests, otherwise they go out without a Bearer token.
+    const keycloakReady = (window as any).keycloakReady as Promise<any> | undefined;
+    const doLoad = () => this.loadDashboardData();
+    if (keycloakReady && typeof (keycloakReady as any).then === 'function') {
+      (keycloakReady as Promise<any>).then(doLoad).catch(doLoad);
+    } else {
+      doLoad();
+    }
+
     this.authSub = this.auth.username$.subscribe(name => {
       if (!name) { return; }
       if (!this.currentUser) {

@@ -3,6 +3,8 @@ import { BehaviorSubject } from 'rxjs';
 
 declare const window: any;
 
+type AuthRedirectMode = 'login' | 'register';
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private usernameSubject = new BehaviorSubject<string | null>(null);
@@ -47,6 +49,66 @@ export class AuthService {
       } catch (e) {
         // some keycloak builds may not expose these handlers; ignore safely
       }
+
+      const keycloakReady = (window as any).keycloakReady;
+      if (keycloakReady && typeof keycloakReady.then === 'function') {
+        keycloakReady
+          .then(() => this.updateFromKeycloak(kc))
+          .catch((err: unknown) => {
+            console.warn('Keycloak readiness check failed', err);
+            this.isLoggedInSubject.next(false);
+          });
+      }
+    }
+  }
+
+  private getRedirectUri(): string {
+    return `${window.location.origin}/dashboard`;
+  }
+
+  private async waitForKeycloakReady(): Promise<any> {
+    const kc = (window as any).keycloak;
+    const keycloakReady = (window as any).keycloakReady;
+
+    if (keycloakReady && typeof keycloakReady.then === 'function') {
+      try {
+        await keycloakReady;
+      } catch (err) {
+        console.warn('Proceeding with manual Keycloak redirect after init failure', err);
+      }
+    }
+
+    return kc;
+  }
+
+  private async redirectToKeycloak(mode: AuthRedirectMode): Promise<boolean> {
+    const action = mode === 'register' ? 'register' : 'login';
+    const urlFactory = mode === 'register' ? 'createRegisterUrl' : 'createLoginUrl';
+
+    try {
+      const kc = await this.waitForKeycloakReady();
+      if (!kc) {
+        console.error('Keycloak not initialized');
+        return false;
+      }
+
+      const redirectUri = this.getRedirectUri();
+      if (typeof kc[urlFactory] === 'function') {
+        const targetUrl = await kc[urlFactory]({ redirectUri });
+        window.location.assign(targetUrl);
+        return true;
+      }
+
+      if (typeof kc[action] === 'function') {
+        await kc[action]({ redirectUri });
+        return true;
+      }
+
+      console.error(`Keycloak ${action} action is not available`);
+      return false;
+    } catch (err) {
+      console.error(`Keycloak ${action} failed`, err);
+      return false;
     }
   }
 
@@ -98,28 +160,11 @@ export class AuthService {
   }
 
   login(): Promise<boolean> {
-    const kc = (window as any).keycloak;
-    if (!kc) {
-      console.error('Keycloak not initialized');
-      return Promise.resolve(false);
-    }
-
-    // Redirect to Keycloak login page
-    kc.login({ redirectUri: `${window.location.origin}/dashboard` });
-    
-    // Return promise (though we're redirecting away)
-    return Promise.resolve(true);
+    return this.redirectToKeycloak('login');
   }
 
-  signup(): void {
-    const kc = (window as any).keycloak;
-    if (!kc) {
-      console.error('Keycloak not initialized');
-      return;
-    }
-
-    // Redirect to Keycloak registration page
-    kc.register({ redirectUri: `${window.location.origin}/dashboard` });
+  signup(): Promise<boolean> {
+    return this.redirectToKeycloak('register');
   }
 
   logout(): void {
