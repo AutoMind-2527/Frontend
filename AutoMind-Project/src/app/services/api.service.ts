@@ -12,10 +12,17 @@ export class ApiService {
   constructor(private http: HttpClient) {}
 
   private getHeaders() {
-    const token = sessionStorage.getItem('token');
+    const kc = (window as any).keycloak;
+    const token = sessionStorage.getItem('token') || (kc && kc.token);
 
     if (!token) {
       return new HttpHeaders();
+    }
+
+    // Keep session token in sync when interceptor/auth service uses kc.token.
+    if (!sessionStorage.getItem('token')) {
+      sessionStorage.setItem('token', token);
+      sessionStorage.setItem('isLoggedIn', 'true');
     }
 
     return new HttpHeaders({

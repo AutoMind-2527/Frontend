@@ -12,46 +12,60 @@ const keycloak = new Keycloak({
 // global verfügbar machen für UI-Buttons
 (window as any).keycloak = keycloak;
 
-keycloak
-  .init({
-    onLoad: 'check-sso',
-    pkceMethod: 'S256',
-    checkLoginIframe: false,
-    enableLogging: true
-  })
-  .then((authenticated) => {
-    console.log('Keycloak initialized. Authenticated:', authenticated);
+// Bootstrap app immediately so UI is available even if Keycloak/network is unstable.
+bootstrapApplication(App, appConfig)
+  .then(() => {
+    keycloak
+      .init({
+        flow: 'implicit',
+        checkLoginIframe: false,
+        enableLogging: true
+      })
+      .then((authenticated) => {
+        console.log('Keycloak initialized. Authenticated:', authenticated);
 
-    // Token fürs Backend speichern
-    if (keycloak.token) {
-      sessionStorage.setItem('token', keycloak.token);
-      sessionStorage.setItem('isLoggedIn', 'true');
-    }
+        if (keycloak.token) {
+          sessionStorage.setItem('token', keycloak.token);
+          sessionStorage.setItem('isLoggedIn', 'true');
+        }
 
-    // Keep sessionStorage token up-to-date on auth events
-    keycloak.onAuthSuccess = () => { 
-      if (keycloak.token) {
-        sessionStorage.setItem('token', keycloak.token); 
-        sessionStorage.setItem('isLoggedIn', 'true');
-      }
-    };
-    keycloak.onAuthRefreshSuccess = () => { 
-      if (keycloak.token) sessionStorage.setItem('token', keycloak.token); 
-    };
-    keycloak.onAuthLogout = () => { 
-      sessionStorage.removeItem('token');
-      sessionStorage.removeItem('isLoggedIn');
-    };
-    keycloak.onTokenExpired = () => {
-      keycloak.updateToken(30)
-        .then(() => { if (keycloak.token) sessionStorage.setItem('token', keycloak.token); })
-        .catch(() => { console.warn('Token refresh failed'); });
-    };
+        // Chain existing handlers (e.g. those set by AuthService) instead of overwriting.
+        const prevOnAuthSuccess = keycloak.onAuthSuccess;
+        const prevOnAuthRefreshSuccess = keycloak.onAuthRefreshSuccess;
+        const prevOnAuthLogout = keycloak.onAuthLogout;
 
-    return bootstrapApplication(App, appConfig);
+        keycloak.onAuthSuccess = () => {
+          if (typeof prevOnAuthSuccess === 'function') prevOnAuthSuccess();
+          if (keycloak.token) {
+            sessionStorage.setItem('token', keycloak.token);
+            sessionStorage.setItem('isLoggedIn', 'true');
+          }
+        };
+
+        keycloak.onAuthRefreshSuccess = () => {
+          if (typeof prevOnAuthRefreshSuccess === 'function') prevOnAuthRefreshSuccess();
+          if (keycloak.token) {
+            sessionStorage.setItem('token', keycloak.token);
+          }
+        };
+
+        keycloak.onAuthLogout = () => {
+          if (typeof prevOnAuthLogout === 'function') prevOnAuthLogout();
+          sessionStorage.removeItem('token');
+          sessionStorage.setItem('isLoggedIn', 'false');
+        };
+
+        keycloak.onTokenExpired = () => {
+          // In implicit flow there is no refresh token. Keep app stable instead
+          // of forcing failing token endpoint calls.
+          sessionStorage.removeItem('token');
+          sessionStorage.setItem('isLoggedIn', 'false');
+        };
+      })
+      .catch((err) => {
+        console.error('Keycloak initialization failed', err);
+      });
   })
   .catch((err) => {
-    console.error('Keycloak initialization failed', err);
-    // Still bootstrap the app even if Keycloak init fails
-    return bootstrapApplication(App, appConfig);
+    console.error('App bootstrap failed', err);
   });

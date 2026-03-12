@@ -11,7 +11,9 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     return next(req.clone({ headers }));
   };
 
-  if (kc && typeof kc.updateToken === 'function') {
+  // Only refresh token for an authenticated Keycloak session.
+  // Calling updateToken without a valid session can trigger failing token-endpoint requests.
+  if (kc && kc.authenticated && kc.refreshToken && typeof kc.updateToken === 'function') {
     // updateToken returns a Promise<boolean>
     // If updateToken fails (no refresh token available), fall back to forwarding
     // the request with the existing token instead of letting the request error out.

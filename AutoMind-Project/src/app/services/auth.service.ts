@@ -19,14 +19,31 @@ export class AuthService {
 
       // attach simple handlers if available
       try {
-        kc.onAuthSuccess = () => this.updateFromKeycloak(kc);
+        const prevOnAuthSuccess = kc.onAuthSuccess;
+        const prevOnAuthLogout = kc.onAuthLogout;
+        const prevOnAuthRefreshSuccess = kc.onAuthRefreshSuccess;
+
+        kc.onAuthSuccess = () => {
+          if (typeof prevOnAuthSuccess === 'function') {
+            prevOnAuthSuccess();
+          }
+          this.updateFromKeycloak(kc);
+        };
         kc.onAuthLogout = () => {
+          if (typeof prevOnAuthLogout === 'function') {
+            prevOnAuthLogout();
+          }
           sessionStorage.removeItem('token');
           sessionStorage.setItem('isLoggedIn', 'false');
           this.usernameSubject.next(null);
           this.isLoggedInSubject.next(false);
         };
-        kc.onAuthRefreshSuccess = () => this.updateFromKeycloak(kc);
+        kc.onAuthRefreshSuccess = () => {
+          if (typeof prevOnAuthRefreshSuccess === 'function') {
+            prevOnAuthRefreshSuccess();
+          }
+          this.updateFromKeycloak(kc);
+        };
       } catch (e) {
         // some keycloak builds may not expose these handlers; ignore safely
       }
@@ -40,6 +57,11 @@ export class AuthService {
 
   private updateFromKeycloak(kc: any) {
     try {
+      if (kc.token) {
+        sessionStorage.setItem('token', kc.token);
+        sessionStorage.setItem('isLoggedIn', 'true');
+      }
+
       const parsed = kc.tokenParsed || {};
       const username = parsed.preferred_username || parsed.username || parsed.name || null;
       if (username) {
@@ -64,9 +86,14 @@ export class AuthService {
           .catch(() => this.usernameSubject.next(null));
       } else {
         this.usernameSubject.next(null);
+        if (!kc.token) {
+          sessionStorage.setItem('isLoggedIn', 'false');
+          this.isLoggedInSubject.next(false);
+        }
       }
     } catch (e) {
       this.usernameSubject.next(null);
+      this.isLoggedInSubject.next(false);
     }
   }
 
