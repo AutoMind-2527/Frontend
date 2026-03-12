@@ -28,8 +28,8 @@ export class Dashboard implements OnInit, AfterViewInit, OnDestroy {
 
   // --- Map ---
   private map!: L.Map;
-  private marker!: L.Marker;
-  private piMarker!: L.Marker;
+  private marker?: L.Marker;
+  private piMarker?: L.Marker;
   private locationSub!: Subscription;
   private piGpsSubscription!: Subscription;
 
@@ -151,6 +151,10 @@ export class Dashboard implements OnInit, AfterViewInit, OnDestroy {
     // Subscription: reagiere auf Positionsupdates vom LocationService
     this.locationSub = this.locationService.position$.subscribe(pos => {
       if (!pos) {
+        // Tracking disabled or unavailable -> hide browser marker.
+        if (this.marker && this.map.hasLayer(this.marker)) {
+          this.map.removeLayer(this.marker);
+        }
         return;
       }
 
@@ -197,26 +201,25 @@ export class Dashboard implements OnInit, AfterViewInit, OnDestroy {
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(this.map);
 
-    // Optionaler Startmarker
-    const pinIcon = L.divIcon({
-      className: 'custom-pin-marker',
-      html: `
-        <svg width="24" height="32" viewBox="0 0 32 44">
-          <path d="M16 0C7.2 0 0 7.2 0 16c0 11 16 28 16 28s16-17 16-28C32 7.2 24.8 0 16 0z"
-            fill="#6c63ff"
-            stroke="#fff"
-            stroke-width="2"/>
-          <circle cx="16" cy="16" r="6" fill="#fff"/>
-        </svg>`,
-      iconSize: [24, 32],
-      iconAnchor: [12, 32]
-    });
-
-    this.marker = L.marker(initialCoords, { icon: pinIcon }).addTo(this.map);
-
     setTimeout(() => {
       try { this.map.invalidateSize(); } catch (e) {}
     }, 200);
+  }
+
+  private resolveVehicleLabel(vehicleId: number | undefined): string {
+    if (vehicleId !== undefined && vehicleId !== null) {
+      const matched = this.vehicles.find(v => v.id === vehicleId);
+      if (matched) {
+        return `${matched.brand} ${matched.model} (${matched.licensePlate})`;
+      }
+    }
+
+    if (this.vehicles.length === 1) {
+      const only = this.vehicles[0];
+      return `${only.brand} ${only.model} (${only.licensePlate})`;
+    }
+
+    return 'Tracker GPS';
   }
 
   private loadPiGpsData(): void {
@@ -227,6 +230,8 @@ export class Dashboard implements OnInit, AfterViewInit, OnDestroy {
         const latest = data[0];
         const coords: L.LatLngExpression = [latest.latitude, latest.longitude];
         const speed = latest.speedKmh ?? 0;
+        const vehicleLabel = this.resolveVehicleLabel(latest.vehicleId);
+        const popupContent = `<b>${vehicleLabel}</b><br/>Speed: ${speed.toFixed(2)} km/h`;
 
         if (!this.piMarker) {
           const piIcon = L.divIcon({
@@ -243,12 +248,13 @@ export class Dashboard implements OnInit, AfterViewInit, OnDestroy {
             iconAnchor: [12, 32]
           });
 
-          this.piMarker = L.marker(coords, { icon: piIcon, title: 'Pi GPS' })
-            .bindPopup(`<b>Pi GPS</b><br/>Speed: ${speed.toFixed(2)} km/h`)
+          this.piMarker = L.marker(coords, { icon: piIcon, title: vehicleLabel })
+            .bindPopup(popupContent)
             .addTo(this.map);
         } else {
           this.piMarker.setLatLng(coords);
-          this.piMarker.setPopupContent(`<b>Pi GPS</b><br/>Speed: ${speed.toFixed(2)} km/h`);
+          this.piMarker.options.title = vehicleLabel;
+          this.piMarker.setPopupContent(popupContent);
         }
       },
       error: (err) => {
