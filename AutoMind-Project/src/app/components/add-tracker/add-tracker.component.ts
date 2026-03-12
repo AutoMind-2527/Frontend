@@ -11,21 +11,82 @@ import { ApiService } from '../../services/api.service';
     <div class="add-tracker-modal-overlay" *ngIf="isOpen" (click)="closeModal()">
       <div class="add-tracker-modal" (click)="$event.stopPropagation()">
         <div class="modal-header">
-          <h2>Add Tracker</h2>
+          <h2>Add Vehicle</h2>
           <button class="close-btn" (click)="closeModal()">&times;</button>
         </div>
 
         <div class="modal-body">
           <p class="instructions">
-            Enter the tracker code provided with your device to link it to your account.
+            Enter your vehicle details and tracker code to save the car directly to your account.
           </p>
+
+          <div class="form-group">
+            <label for="license-plate">License Plate:</label>
+            <input
+              type="text"
+              id="license-plate"
+              [(ngModel)]="vehicleForm.licensePlate"
+              placeholder="e.g., LL-123AB"
+              [disabled]="isLoading"
+              class="tracker-input"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="brand">Brand:</label>
+            <input
+              type="text"
+              id="brand"
+              [(ngModel)]="vehicleForm.brand"
+              placeholder="e.g., Volkswagen"
+              [disabled]="isLoading"
+              class="tracker-input"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="model">Model:</label>
+            <input
+              type="text"
+              id="model"
+              [(ngModel)]="vehicleForm.model"
+              placeholder="e.g., Golf"
+              [disabled]="isLoading"
+              class="tracker-input"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="mileage">Mileage:</label>
+            <input
+              type="number"
+              id="mileage"
+              [(ngModel)]="vehicleForm.mileage"
+              placeholder="e.g., 120000"
+              [disabled]="isLoading"
+              class="tracker-input"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="fuel-consumption">Fuel Consumption (L/100km):</label>
+            <input
+              type="number"
+              step="0.1"
+              id="fuel-consumption"
+              [(ngModel)]="vehicleForm.fuelConsumption"
+              placeholder="e.g., 6.5"
+              [disabled]="isLoading"
+              class="tracker-input"
+            />
+          </div>
 
           <div class="form-group">
             <label for="tracker-code">Tracker Code:</label>
             <input
               type="text"
               id="tracker-code"
-              [(ngModel)]="trackerCode"
+              [(ngModel)]="vehicleForm.trackerCode"
               placeholder="e.g., TRACK-ABC-123"
               [disabled]="isLoading"
               class="tracker-input"
@@ -50,9 +111,9 @@ import { ApiService } from '../../services/api.service';
           </button>
           <button
             class="btn-primary"
-            (click)="claimTracker()"
-            [disabled]="isLoading || !trackerCode.trim()">
-            {{ isLoading ? 'Adding...' : 'Add Tracker' }}
+            (click)="saveVehicle()"
+            [disabled]="isLoading || !vehicleForm.licensePlate.trim() || !vehicleForm.brand.trim() || !vehicleForm.model.trim() || !vehicleForm.trackerCode.trim()">
+            {{ isLoading ? 'Saving...' : 'Save Vehicle' }}
           </button>
         </div>
       </div>
@@ -249,18 +310,23 @@ export class AddTrackerComponent {
   @Output() trackerAdded = new EventEmitter<any>();
 
   isOpen = false;
-  trackerCode = '';
   isLoading = false;
   errorMessage = '';
   successMessage = '';
+  vehicleForm = {
+    licensePlate: '',
+    brand: '',
+    model: '',
+    mileage: 0,
+    fuelConsumption: 0,
+    trackerCode: ''
+  };
 
   constructor(private api: ApiService) {}
 
   openModal(): void {
     this.isOpen = true;
-    this.trackerCode = '';
-    this.errorMessage = '';
-    this.successMessage = '';
+    this.resetForm();
   }
 
   closeModal(): void {
@@ -268,8 +334,21 @@ export class AddTrackerComponent {
     this.close.emit();
   }
 
-  claimTracker(): void {
-    if (!this.trackerCode.trim()) {
+  private resetForm(): void {
+    this.vehicleForm = {
+      licensePlate: '',
+      brand: '',
+      model: '',
+      mileage: 0,
+      fuelConsumption: 0,
+      trackerCode: ''
+    };
+    this.errorMessage = '';
+    this.successMessage = '';
+  }
+
+  saveVehicle(): void {
+    if (!this.vehicleForm.licensePlate.trim() || !this.vehicleForm.brand.trim() || !this.vehicleForm.model.trim() || !this.vehicleForm.trackerCode.trim()) {
       return;
     }
 
@@ -277,10 +356,17 @@ export class AddTrackerComponent {
     this.errorMessage = '';
     this.successMessage = '';
 
-    this.api.claimTracker(this.trackerCode).subscribe(
+    this.api.createVehicle({
+      licensePlate: this.vehicleForm.licensePlate.trim(),
+      brand: this.vehicleForm.brand.trim(),
+      model: this.vehicleForm.model.trim(),
+      mileage: Number(this.vehicleForm.mileage) || 0,
+      fuelConsumption: Number(this.vehicleForm.fuelConsumption) || 0,
+      trackerCode: this.vehicleForm.trackerCode.trim()
+    }).subscribe(
       (response: any) => {
         this.isLoading = false;
-        this.successMessage = `✅ Tracker claimed successfully!`;
+        this.successMessage = '✅ Vehicle and tracker saved successfully!';
         this.trackerAdded.emit(response);
         
         // Close modal after 2 seconds
@@ -290,12 +376,10 @@ export class AddTrackerComponent {
       },
       (error) => {
         this.isLoading = false;
-        if (error.status === 404) {
-          this.errorMessage = '❌ Tracker not found or already claimed';
-        } else if (error.error?.message) {
+        if (error.error?.message) {
           this.errorMessage = `❌ ${error.error.message}`;
         } else {
-          this.errorMessage = '❌ Failed to claim tracker. Please try again.';
+          this.errorMessage = '❌ Failed to save vehicle and tracker. Please try again.';
         }
       }
     );
